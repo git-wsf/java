@@ -1,0 +1,59 @@
+spring:
+  profiles:
+    active: dev,application
+  application:
+    name: demo
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: yangliuxin
+    initialSize: 1
+    minIdle: 10
+    maxActive: 10
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: select 1
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.st
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+      format-sql: true
+  jackson:
+    serialization:
+      indent-output: true
+
+server:
+  port: 8888
+  tomcat:
+      uri-encoding: UTF-8
+      basedir: .
+      accesslog:
+        enabled: true
+        directory: ${logging.path}
+        pattern: combined
+        prefix: tomcat_access
+  servlet-path: /demo
+  #context-path: /boot
+
+#debug: true
+logging:
+  config: classpath:logback-spring.xml
+  path: /var/log/whtech/demo
+
+
+flyway:
+  enabled: true
+  baseline-on-migrate: true
+  #baselineOnMigrate: true
+  encoding: UTF-8
+  locations: classpath:db/migration
