@@ -27,7 +27,8 @@ public class TestController {
         userApplication.save(user);
         System.out.println(userList);
 
-        LOGGER.info("log writing!");
+        LOGGER.info("log writing on main!");
         return "test";
     }
+
 }
