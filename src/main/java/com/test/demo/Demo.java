@@ -111,25 +111,31 @@ public class Demo {
                 "    \"errorMsg\": null\n" +
                 "}";
 
-//        try {
-//            BaseVo object = objectMapper.readValue(json,BaseVo.class);
-//            System.out.println(object);
-//
-//            Class clazz = object.getClass();
-//            Object o = (BaseVo) clazz.newInstance();
-//            Field[] fields = clazz.getDeclaredFields();
-//            for (Field field : fields) {
-//                String key = field.getName();
-//                field.setAccessible(true);
-//                if (key.equals("code")){
-//                    field.set(o,1);
-//                }
-//            }
-//            System.out.println(o);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            BaseVo baseVo = objectMapper.readValue(json,BaseVo.class);
+            System.out.println(baseVo);
+
+            Class clazz = baseVo.getClass();
+            BaseVo o =  (BaseVo)clazz.newInstance();
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                String key = field.getName();
+                field.setAccessible(true);
+                if (key.equals("code")){
+                    field.set(o,1);
+                }
+                if (key.equals("msg")){
+                    field.set(o,"ok");
+                }
+                if (key.equals("errorMsg")){
+                    field.set(o,"");
+                }
+            }
+            System.out.println(o);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -164,6 +170,8 @@ public class Demo {
 
     @Builder(toBuilder = true)
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     private static class BaseVo<T> {
 
         private Integer code;
