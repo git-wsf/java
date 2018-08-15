@@ -17,4 +17,10 @@ public interface UserRepository  {
 
     Page<User> getUserListByUserName(String userName) throws Exception;
 
+    List<User> findUserListByUsernameAndUserPwd(String userName,String userPwd) throws Exception;
+
+
+    List<User> findUserListByUserPwd(String userPwd) throws Exception;
+
+
 }

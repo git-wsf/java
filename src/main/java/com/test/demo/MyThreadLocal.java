@@ -1,29 +1,15 @@
 package com.test.demo;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.deploy.util.ArrayUtil;
-import com.sun.tools.javac.util.ArrayUtils;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import lombok.Builder;
+import lombok.Data;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalAdjusters;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Date;
+import java.util.List;
 
 public class MyThreadLocal {
 

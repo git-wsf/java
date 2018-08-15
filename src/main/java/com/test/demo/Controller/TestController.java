@@ -47,6 +47,19 @@ public class TestController {
 
         return  userApplication.getUserListByUserName(userName);
     }
+    @GetMapping("/e/{userName}/{userPwd}")
+    public List<User> get(@PathVariable @Valid  @NotNull String userName,@PathVariable @Valid  @NotNull String userPwd) throws Exception {
+
+        return  userApplication.findUserListByUsernameAndUserPwd(userName,userPwd);
+    }
+
+
+    @GetMapping("p/{userPwd}")
+    public List<User> getByUserPwd(@PathVariable @Valid  @NotNull String userPwd) throws Exception {
+
+        return  userApplication.findUserListByUserPwd(userPwd);
+    }
+
 
 
 

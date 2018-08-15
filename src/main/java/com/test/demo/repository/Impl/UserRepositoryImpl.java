@@ -1,15 +1,16 @@
 package com.test.demo.repository.Impl;
 
+import com.querydsl.jpa.impl.JPAQuery;
+import com.test.demo.domain.QUser;
 import com.test.demo.domain.User;
 import com.test.demo.repository.UserRepository;
 import com.test.demo.repository.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -36,13 +37,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User save(User user) throws Exception {
+    public User save(User user)  {
         return userDao.save(user);
 
     }
 
     @Override
-    public User getUserByUserId(Long userId) throws Exception{
+    public User getUserByUserId(Long userId) {
         StringBuilder sb = new StringBuilder();
         sb.append("select * from users where user_id = %s");
         String sql = sb.toString();
@@ -53,26 +54,51 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Page<User> getUserListByUserName(String userName) throws Exception {
+    public Page<User> getUserListByUserName(String userName)  {
 
         int pageNo=0;
         int pageSize=5;
         PageRequest pageRequest=new PageRequest(pageNo, pageSize);
 
-        Specification<User> specification = new Specification<User>() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                Predicate predicateUserName=cb.like(root.get("username").as(String.class), "%"+userName+"%");
-                Predicate predicateUserPwd=cb.like(root.get("userpwd").as(String.class), "%"+userName+"%");
-                //Predicate p3=cb.like(root.get("email").as(String.class), "%s%");
-//              构建组合的Predicate示例：
-                Predicate p = cb.or(predicateUserName,predicateUserPwd);
-
-                return p;
-            }
+        Specification<User> specification = (root, query, cb) -> {
+            Predicate predicateUserName=cb.like(root.get("username").as(String.class), "%"+userName+"%");
+            Predicate predicateUserPwd=cb.like(root.get("userpwd").as(String.class), "%"+userName+"%");
+            return cb.or(predicateUserName,predicateUserPwd);
         };
 
         Page<User> users = userDao.findAll(specification,pageRequest);
         return users;
+    }
+
+    @Override
+    public List<User> findUserListByUsernameAndUserPwd(String userName,String userPwd) throws Exception {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        Predicate usernamePredicate = null;
+        Predicate userPwdPredicate = null;
+        if(!StringUtils.isEmpty(userName)){
+            usernamePredicate = builder.equal(root.get("username"), userName);
+        }
+        if(!StringUtils.isEmpty(userPwd)){
+            userPwdPredicate = builder.equal(root.get("userpwd"), userPwd);
+        }
+        query.where(builder.or(usernamePredicate, userPwdPredicate));
+        return entityManager.createQuery(query.select(root)).getResultList();
+    }
+
+    @Override
+    public List<User> findUserListByUserPwd(String userPwd) throws Exception {
+        QUser user = QUser.user;
+        JPAQuery<?> query = new JPAQuery<Void>(entityManager);
+        JPAQuery<User> bob = query.select(user)
+                .from(user)
+                .where(user.userpwd.eq(userPwd))
+                .fetchAll();
+       return bob.fetchAll().fetch();
+
+//        QUser user = QUser.User;
+//        BooleanExpression customerHasBirthday = customer.birthday.eq(today);
+//        BooleanExpression isLongTermCustomer = customer.createdAt.lt(today.minusYears(2));
     }
 }

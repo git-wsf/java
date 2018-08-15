@@ -36,4 +36,14 @@ public class UserApplicationImpl implements UserApplication {
     public Page<User> getUserListByUserName(String userName) throws Exception {
         return userRepository.getUserListByUserName(userName);
     }
+
+    @Override
+    public List<User> findUserListByUsernameAndUserPwd(String userName, String userPwd) throws Exception {
+        return userRepository.findUserListByUsernameAndUserPwd( userName,  userPwd);
+    }
+
+    @Override
+    public List<User> findUserListByUserPwd(String userPwd) throws Exception {
+        return userRepository.findUserListByUserPwd(userPwd);
+    }
 }
