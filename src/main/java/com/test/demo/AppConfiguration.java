@@ -5,35 +5,29 @@ import com.test.demo.property.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
-@Configuration
-@EnableJpaRepositories(basePackages= "com.test.demo.repository",
-        entityManagerFactoryRef = "entityManagerFactory",
-        transactionManagerRef = "transactionManager")
+//@Configuration
 @EnableTransactionManagement
-@EnableAutoConfiguration
 public class AppConfiguration {
 
     private Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 
     @Autowired
-    private Property property;
+    public Property property;
 
+
+    @Autowired
+    private JpaProperties jpaProperties;
 
     @Bean
     @Primary
@@ -70,31 +64,14 @@ public class AppConfiguration {
 
 
 
-    @Autowired
-    private JpaProperties jpaProperties;
-//
+
+
     @Primary
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
         return builder.dataSource(datasource()).persistenceUnit("jpa").properties(jpaProperties.getProperties()).packages(new String[]{"com.test.demo.domain"}).build();
     }
-//    public EntityManagerFactory entityManagerFactory() {
-//        String persistenceUnitName = "jpa";
-//        EntityManagerFactory factory= Persistence.createEntityManagerFactory(persistenceUnitName,jpaProperties.getProperties());
-//
-//        return factory;
-//
-////        String persistenceUnitName = "jpa";
-////        EntityManagerFactory factory = Persistence.createEntityManagerFactory(persistenceUnitName);
-////        return factory;
-//        //LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-//        //localContainerEntityManagerFactoryBean.setPersistenceUnitName("persistenceUnit");
-//        //return localContainerEntityManagerFactoryBean;
-//    }
 
-
-//
-//
     @Primary
     @Bean(name = "transactionManager")
     public JpaTransactionManager transactionManager(EntityManagerFactoryBuilder builder) {
