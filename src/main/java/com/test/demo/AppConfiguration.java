@@ -1,18 +1,23 @@
 package com.test.demo;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import org.flywaydb.core.Flyway;
+import com.test.demo.property.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
@@ -21,118 +26,82 @@ import java.sql.SQLException;
         entityManagerFactoryRef = "entityManagerFactory",
         transactionManagerRef = "transactionManager")
 @EnableTransactionManagement
+@EnableAutoConfiguration
 public class AppConfiguration {
 
     private Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 
-    @Value("${spring.datasource.url}")
-    private String dbUrl;
+    @Autowired
+    private Property property;
 
-    @Value("${spring.datasource.username}")
-    private String username;
 
-    @Value("${spring.datasource.password}")
-    private String password;
-
-    @Value("${spring.datasource.driverClassName}")
-    private String driverClassName;
-
-    @Value("${spring.datasource.initialSize}")
-    private int initialSize;
-
-    @Value("${spring.datasource.minIdle}")
-    private int minIdle;
-
-    @Value("${spring.datasource.maxActive}")
-    private int maxActive;
-
-    @Value("${spring.datasource.maxWait}")
-    private int maxWait;
-
-    @Value("${spring.datasource.timeBetweenEvictionRunsMillis}")
-    private int timeBetweenEvictionRunsMillis;
-
-    @Value("${spring.datasource.minEvictableIdleTimeMillis}")
-    private int minEvictableIdleTimeMillis;
-
-    @Value("${spring.datasource.validationQuery}")
-    private String validationQuery;
-
-    @Value("${spring.datasource.testWhileIdle}")
-    private boolean testWhileIdle;
-
-    @Value("${spring.datasource.testOnBorrow}")
-    private boolean testOnBorrow;
-
-    @Value("${spring.datasource.testOnReturn}")
-    private boolean testOnReturn;
-
-    @Value("${spring.datasource.poolPreparedStatements}")
-    private boolean poolPreparedStatements;
-
-    @Value("${spring.datasource.maxPoolPreparedStatementPerConnectionSize}")
-    private int maxPoolPreparedStatementPerConnectionSize;
-
-    @Value("${spring.datasource.filters}")
-    private String filters;
-
-    @Value("{spring.datasource.connectionProperties}")
-    private String connectionProperties;
-
-    @Bean( name = "dataSource")
+    @Bean
     @Primary
     public DataSource datasource(){
         DruidDataSource datasource = new DruidDataSource();
 
-        datasource.setUrl(this.dbUrl);
-        datasource.setUsername(username);
-        datasource.setPassword(password);
-        datasource.setDriverClassName(driverClassName);
+        datasource.setUrl(property.getUrl());
+        datasource.setUsername(property.getUsername());
+        datasource.setPassword(property.getPassword());
+        datasource.setDriverClassName(property.getDriverClassName());
 
         //configuration
-        datasource.setInitialSize(initialSize);
-        datasource.setMinIdle(minIdle);
-        datasource.setMaxActive(maxActive);
-        datasource.setMaxWait(maxWait);
-        datasource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
-        datasource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
-        datasource.setValidationQuery(validationQuery);
-        datasource.setTestWhileIdle(testWhileIdle);
-        datasource.setTestOnBorrow(testOnBorrow);
-        datasource.setTestOnReturn(testOnReturn);
-        datasource.setPoolPreparedStatements(poolPreparedStatements);
-        datasource.setMaxPoolPreparedStatementPerConnectionSize(maxPoolPreparedStatementPerConnectionSize);
+        datasource.setInitialSize(property.getInitialSize());
+        datasource.setMinIdle(property.getMinIdle());
+        datasource.setMaxActive(property.getMaxActive());
+        datasource.setMaxWait(property.getMaxWait());
+        datasource.setTimeBetweenEvictionRunsMillis(property.getTimeBetweenEvictionRunsMillis());
+        datasource.setMinEvictableIdleTimeMillis(property.getMinEvictableIdleTimeMillis());
+        datasource.setValidationQuery(property.getValidationQuery());
+        datasource.setTestWhileIdle(property.getTestWhileIdle());
+        datasource.setTestOnBorrow(property.getTestOnBorrow());
+        datasource.setTestOnReturn(property.getTestOnReturn());
+        datasource.setPoolPreparedStatements(property.getPoolPreparedStatements());
+        datasource.setMaxPoolPreparedStatementPerConnectionSize(property.getMaxPoolPreparedStatementPerConnectionSize());
         try {
-            datasource.setFilters(filters);
+            datasource.setFilters(property.getFilters());
         } catch (SQLException e) {
             logger.error("druid configuration initialization filter", e);
         }
-        datasource.setConnectionProperties(connectionProperties);
+        datasource.setConnectionProperties(property.getConnectionProperties());
 
         return datasource;
     }
 
 
 
-    //@Autowired
-    //JpaProperties jpaProperties;
+    @Autowired
+    private JpaProperties jpaProperties;
 //
-//    @Primary
-//    @Bean(name = "entityManageFactory")
-//    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-//        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+    @Primary
+    @Bean(name = "entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
+        return builder.dataSource(datasource()).persistenceUnit("jpa").properties(jpaProperties.getProperties()).packages(new String[]{"com.test.demo.domain"}).build();
+    }
+//    public EntityManagerFactory entityManagerFactory() {
+//        String persistenceUnitName = "jpa";
+//        EntityManagerFactory factory= Persistence.createEntityManagerFactory(persistenceUnitName,jpaProperties.getProperties());
+//
+//        return factory;
+//
+////        String persistenceUnitName = "jpa";
+////        EntityManagerFactory factory = Persistence.createEntityManagerFactory(persistenceUnitName);
+////        return factory;
+//        //LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 //        //localContainerEntityManagerFactoryBean.setPersistenceUnitName("persistenceUnit");
-//        return localContainerEntityManagerFactoryBean;
+//        //return localContainerEntityManagerFactoryBean;
 //    }
+
+
 //
 //
-//    @Primary
-//    @Bean(name = "transactionManager")
-//    public JpaTransactionManager transactionManager(EntityManagerFactoryBuilder builder) {
-//        JpaTransactionManager transactionManager = new JpaTransactionManager();
-//        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-//        return transactionManager;
-//    }
+    @Primary
+    @Bean(name = "transactionManager")
+    public JpaTransactionManager transactionManager(EntityManagerFactoryBuilder builder) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory(builder).getObject());
+        return transactionManager;
+    }
 
 
 

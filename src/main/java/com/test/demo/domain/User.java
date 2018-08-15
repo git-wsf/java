@@ -20,6 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter(AccessLevel.PUBLIC)
+    @Column(name="user_id")
     private long userId;
 
 
