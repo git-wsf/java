@@ -1,15 +1,20 @@
 package com.test.demo.Controller;
 
+import com.sun.deploy.util.ArrayUtil;
 import com.test.demo.application.UserApplication;
 import com.test.demo.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -22,14 +27,20 @@ public class TestController {
     @GetMapping("/put/{userName}/{userPwd}")
     public String test(@PathVariable @Valid @NotNull String userName,@PathVariable @Valid @NotNull String userPwd) throws Exception {
 
-        List<User> userList = userApplication.getAllUserList();
+
+
+        List<User> users = userApplication.findUserListByUsernameAndUserPwd(userName,userPwd);
+        if(!users.isEmpty()){
+            throw new Exception("用户名重复！");
+        }
         User user = new User();
         user.setUsername(userName);
         user.setUserpwd(userPwd);
         userApplication.save(user);
+        List<User> userList = userApplication.getAllUserList();
         System.out.println(userList);
-        log.info("log writing!");
-        return "test";
+        log.info(">>>>>>>>>userList:{}",userList);
+        return userList.toString();
     }
 
 

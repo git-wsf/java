@@ -3,8 +3,10 @@ package com.test.demo.repository.Impl;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.test.demo.domain.QUser;
 import com.test.demo.domain.User;
+import com.test.demo.domain.UserVersion;
 import com.test.demo.repository.UserRepository;
 import com.test.demo.repository.dao.UserDao;
+import com.test.demo.repository.dao.UserVersionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,10 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
     private UserDao userDao;
+
+
+    @Autowired
+    private UserVersionDao userVersionDao;
 
 
     @Autowired
@@ -107,6 +113,8 @@ public class UserRepositoryImpl implements UserRepository {
         user.setUsername(newname);
         userDao.save(user);
 
+        UserVersion userVersion = new UserVersion(user);
+        userVersionDao.save(userVersion);
         return user;
     }
 }
