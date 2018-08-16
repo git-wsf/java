@@ -20,6 +20,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -51,7 +52,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getUserByUserId(Long userId) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from users where user_id = %s");
+        sb.append("select * from users where id = %s");
         String sql = sb.toString();
         sql = String.format(sql, userId);
         Query userQuery =  entityManager.createNativeQuery(sql,User.class);
@@ -106,14 +107,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public User modUserNameById(Long id, String username, String newname) throws Exception {
 
 
         User user = userDao.getOne(id);
+        UserVersion userVersion = new UserVersion(user);
         user.setUsername(newname);
         userDao.save(user);
 
-        UserVersion userVersion = new UserVersion(user);
+
         userVersionDao.save(userVersion);
         return user;
     }
