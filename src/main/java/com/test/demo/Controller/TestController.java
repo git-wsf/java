@@ -19,16 +19,15 @@ public class TestController {
     @Autowired
     private UserApplication userApplication;
 
-    @GetMapping("/test/{userName}")
-    public String test(@PathVariable String userName) throws Exception {
+    @GetMapping("/put/{userName}/{userPwd}")
+    public String test(@PathVariable @Valid @NotNull String userName,@PathVariable @Valid @NotNull String userPwd) throws Exception {
 
         List<User> userList = userApplication.getAllUserList();
         User user = new User();
         user.setUsername(userName);
-        user.setUserpwd("chunfengshili");
+        user.setUserpwd(userPwd);
         userApplication.save(user);
         System.out.println(userList);
-
         log.info("log writing!");
         return "test";
     }
@@ -59,6 +58,15 @@ public class TestController {
 
         return  userApplication.findUserListByUserPwd(userPwd);
     }
+
+
+    @GetMapping("/m/{id}/{username}/{newname}")
+    public User modUserNameById(@PathVariable @Valid  @NotNull Long id,@PathVariable @Valid  @NotNull String username,@PathVariable @Valid  @NotNull String newname) throws Exception {
+
+        return  userApplication.modUserNameById(id,username,newname);
+    }
+
+
 
 
 

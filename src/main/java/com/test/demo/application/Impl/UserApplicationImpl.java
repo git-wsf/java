@@ -46,4 +46,9 @@ public class UserApplicationImpl implements UserApplication {
     public List<User> findUserListByUserPwd(String userPwd) throws Exception {
         return userRepository.findUserListByUserPwd(userPwd);
     }
+
+    @Override
+    public User modUserNameById(Long id, String username, String newname) throws Exception {
+        return userRepository.modUserNameById(id,username,newname);
+    }
 }

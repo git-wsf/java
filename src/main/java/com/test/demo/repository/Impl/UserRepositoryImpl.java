@@ -97,8 +97,16 @@ public class UserRepositoryImpl implements UserRepository {
                 .fetchAll();
        return bob.fetchAll().fetch();
 
-//        QUser user = QUser.User;
-//        BooleanExpression customerHasBirthday = customer.birthday.eq(today);
-//        BooleanExpression isLongTermCustomer = customer.createdAt.lt(today.minusYears(2));
+    }
+
+    @Override
+    public User modUserNameById(Long id, String username, String newname) throws Exception {
+
+
+        User user = userDao.getOne(id);
+        user.setUsername(newname);
+        userDao.save(user);
+
+        return user;
     }
 }

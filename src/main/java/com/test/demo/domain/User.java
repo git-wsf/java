@@ -1,37 +1,28 @@
 package com.test.demo.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User {
-
-    public User() {
-    }
-
-    public User(String username, String userpwd) {
-        this.username = username;
-        this.userpwd = userpwd;
-    }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter(AccessLevel.PUBLIC)
-    @Column(name="user_id")
-    private long userId;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Slf4j
+@DynamicInsert
+@DynamicUpdate
+public class User extends AbstractDomain {
 
 
-    @Getter
-    @Setter(AccessLevel.PUBLIC)
+
     @Column(name="username")
     private String username;
 
-
-    @Getter
-    @Setter(AccessLevel.PUBLIC)
     @Column(name = "userpwd")
     private String userpwd;
 

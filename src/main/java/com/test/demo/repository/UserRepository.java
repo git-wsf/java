@@ -22,5 +22,7 @@ public interface UserRepository  {
 
     List<User> findUserListByUserPwd(String userPwd) throws Exception;
 
+    User modUserNameById(Long id,String username,String newname) throws Exception;
+
 
 }
