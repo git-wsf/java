@@ -18,6 +18,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <mysql-connector>5.1.39</mysql-connector>
         <springboot-redis>1.4.7.RELEASE</springboot-redis>
+        <basePackage>com.test.client</basePackage>
         <!--<hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>-->
     </properties>
 
@@ -27,15 +28,27 @@
         <version>1.5.6.RELEASE</version>
         <relativePath />
     </parent>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Dalston.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.spring.platform</groupId>
+                <artifactId>platform-bom</artifactId>
+                <version>Athens-SR2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>io.spring.platform</groupId>
-            <artifactId>platform-bom</artifactId>
-            <version>Athens-SR2</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -58,8 +71,20 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -108,6 +133,22 @@
             <artifactId>querydsl-jpa</artifactId>
             <version>${querydsl.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>1.5.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen</artifactId>
+            <version>2.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-security</artifactId>
+            <version>1.2.3.RELEASE</version>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>org.slf4j</groupId>-->
@@ -148,6 +189,82 @@
                         <version>${querydsl.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>com.github.kongchen</groupId>
+                <artifactId>swagger-maven-plugin</artifactId>
+                <version>3.1.7</version>
+                <configuration>
+                    <apiSources>
+                        <apiSource>
+                            <springmvc>true</springmvc>
+                            <locations>
+                                <location>com.test.demo.controller</location>
+                            </locations>
+                            <schemes>
+                                <scheme>http</scheme>
+                                <scheme>https</scheme>
+                            </schemes>
+                            <host>xxxx</host>
+                            <basePath>/</basePath>
+                            <info>
+                                <title>Swagger Maven Plugin Sample</title>
+                                <version>v1</version>
+                                <description>
+                                    This is a sample.
+                                </description>
+                                <termsOfService>
+                                    http://www.github.com/kongchen/swagger-maven-plugin
+                                </termsOfService>
+                                <contact>
+                                    <email>xxx</email>
+                                    <name>xxx</name>
+                                    <url>xxx</url>
+                                </contact>
+                                <license>
+                                    <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+                                    <name>Apache 2.0</name>
+                                </license>
+                            </info>
+                            <swaggerDirectory>${basedir}/src/main/resources/swagger-ui</swaggerDirectory>
+                        </apiSource>
+                    </apiSources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>2.2.3</version>
+            <executions>
+            <execution>
+            <goals>
+            <goal>generate</goal>
+            </goals>
+            <configuration>
+            <inputSpec>${basedir}/src/main/resources/swagger-ui/swagger.json</inputSpec>
+            <language>spring</language>
+            <library>spring-cloud</library>
+            <configOptions>
+            <sourceFolder>src/main/java</sourceFolder>
+            </configOptions>
+            <apiPackage>${basePackage}.api</apiPackage>
+            <modelPackage>${basePackage}.model</modelPackage>
+            <invokerPackage>${basePackage}.handler</invokerPackage>
+            <generateApiTests>true</generateApiTests>
+            <generateModelTests>true</generateModelTests>
+            </configuration>
+            </execution>
+            </executions>
             </plugin>
         </plugins>
     </build>

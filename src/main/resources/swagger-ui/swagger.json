@@ -1,0 +1,21 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is a sample.",
+    "version" : "v1",
+    "title" : "Swagger Maven Plugin Sample",
+    "termsOfService" : "http://www.github.com/kongchen/swagger-maven-plugin",
+    "contact" : {
+      "name" : "xxx",
+      "url" : "xxx",
+      "email" : "xxx"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "xxxx",
+  "basePath" : "/",
+  "schemes" : [ "http", "https" ]
+}
