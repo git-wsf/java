@@ -8,7 +8,7 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 import java.util.List;
 
-public interface UserDao extends JpaRepository<User, Long> , JpaSpecificationExecutor<User> , QueryDslPredicateExecutor {
+public interface UserDao extends JpaRepository<User, Long> , JpaSpecificationExecutor<User>  {
 
     List<User> findAll(Specification<User> var1);
 

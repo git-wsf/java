@@ -1,20 +1,15 @@
-package com.test.demo.Controller;
+package com.test.demo.controller;
 
-import com.sun.deploy.util.ArrayUtil;
 import com.test.demo.application.UserApplication;
 import com.test.demo.domain.User;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @Slf4j

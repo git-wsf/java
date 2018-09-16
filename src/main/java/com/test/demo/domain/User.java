@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "users")
 @Data
+@EqualsAndHashCode(callSuper =false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j

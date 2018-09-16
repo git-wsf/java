@@ -21,7 +21,7 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxPoolPreparedStatementPerConnectionSize: 20
-    filters: stat,wall,log4j
+    filters: stat,log4j,wall
     connectionProperties: druid.stat.mergeSql=true;druid.st
   jpa:
     hibernate:
@@ -48,7 +48,7 @@ server:
 #debug: true
 logging:
   config: classpath:logback-spring.xml
-  path: /var/log/whtech/demo
+  path: /var/log/java
 
 
 flyway:

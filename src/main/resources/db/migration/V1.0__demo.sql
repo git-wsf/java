@@ -1,4 +1,3 @@
-use test;
 CREATE TABLE `tb_service_registration` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `kid_id` bigint(20) NOT NULL COMMENT '孩子',
@@ -10,4 +9,4 @@ CREATE TABLE `tb_service_registration` (
   `update_time` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_child_service` (`kid_id`,`service_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=3886 DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;

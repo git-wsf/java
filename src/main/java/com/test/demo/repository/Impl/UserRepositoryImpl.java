@@ -1,7 +1,6 @@
 package com.test.demo.repository.Impl;
 
 import com.querydsl.jpa.impl.JPAQuery;
-import com.test.demo.domain.QUser;
 import com.test.demo.domain.User;
 import com.test.demo.domain.UserVersion;
 import com.test.demo.repository.UserRepository;
@@ -96,13 +95,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findUserListByUserPwd(String userPwd) throws Exception {
-        QUser user = QUser.user;
-        JPAQuery<?> query = new JPAQuery<Void>(entityManager);
-        JPAQuery<User> bob = query.select(user)
-                .from(user)
-                .where(user.userpwd.eq(userPwd))
-                .fetchAll();
-       return bob.fetchAll().fetch();
+//        QUser user = QUser.user;
+//        JPAQuery<?> query = new JPAQuery<Void>(entityManager);
+//        JPAQuery<User> bob = query.select(user)
+//                .from(user)
+//                .where(user.userpwd.eq(userPwd))
+//                .fetchAll();
+       return null;
 
     }
 
