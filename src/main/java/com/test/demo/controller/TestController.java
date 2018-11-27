@@ -2,6 +2,7 @@ package com.test.demo.controller;
 
 import com.test.demo.application.UserApplication;
 import com.test.demo.domain.User;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@Api("ceshi")
 public class TestController {
     //private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 

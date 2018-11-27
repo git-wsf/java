@@ -14,9 +14,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(scanBasePackages = "com.test.demo",exclude = {
         DataSourceAutoConfiguration.class,
-        JpaRepositoriesAutoConfiguration.class,
-        HibernateJpaAutoConfiguration.class,
-        SpringDataWebAutoConfiguration.class,
+        //JpaRepositoriesAutoConfiguration.class,
+        //HibernateJpaAutoConfiguration.class,
+        SpringDataWebAutoConfiguration.class
         //FlywayAutoConfiguration.class,
         }
 )
@@ -26,7 +26,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ServletComponentScan
 @EnableAsync
 @Import({AppConfiguration.class})
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 public class DemoApplication {
 
 
