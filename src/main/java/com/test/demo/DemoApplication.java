@@ -2,24 +2,21 @@ package com.test.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(scanBasePackages = "com.test.demo",exclude = {
         DataSourceAutoConfiguration.class,
         //JpaRepositoriesAutoConfiguration.class,
         //HibernateJpaAutoConfiguration.class,
-        SpringDataWebAutoConfiguration.class
+        //SpringDataWebAutoConfiguration.class
         //FlywayAutoConfiguration.class,
         }
 )
 @ServletComponentScan
 @EnableAsync
-@Import({AppConfiguration.class})
+//@Import({AppConfiguration.class})
 public class DemoApplication {
 
 

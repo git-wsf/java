@@ -1,6 +1,5 @@
 package com.test.demo.repository.Impl;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.test.demo.domain.User;
 import com.test.demo.domain.UserVersion;
 import com.test.demo.repository.UserRepository;

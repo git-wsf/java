@@ -39,7 +39,7 @@ server:
       basedir: .
       accesslog:
         enabled: true
-        directory: ${logging.path}
+        directory: log
         pattern: combined
         prefix: tomcat_access
   servlet-path: /demo
@@ -47,9 +47,8 @@ server:
 
 #debug: true
 logging:
-  config: classpath:logback-spring.xml
-  path: /var/log/java
-
+  level: debug
+  file: log/log.log
 
 flyway:
   enabled: true
