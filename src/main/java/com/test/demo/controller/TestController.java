@@ -61,13 +61,6 @@ public class TestController {
     }
 
 
-    @GetMapping("p/{userPwd}")
-    public List<User> getByUserPwd(@PathVariable @Valid  @NotNull String userPwd) throws Exception {
-
-        return  userApplication.findUserListByUserPwd(userPwd);
-    }
-
-
     @GetMapping("/m/{id}/{username}/{newname}")
     public User modUserNameById(@PathVariable @Valid  @NotNull Long id,@PathVariable @Valid  @NotNull String username,@PathVariable @Valid  @NotNull String newname) throws Exception {
 

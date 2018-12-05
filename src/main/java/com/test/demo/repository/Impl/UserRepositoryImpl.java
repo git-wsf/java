@@ -42,7 +42,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User save(User user)  {
+    public User save(User user) {
         return userDao.save(user);
 
     }
@@ -53,55 +53,43 @@ public class UserRepositoryImpl implements UserRepository {
         sb.append("select * from users where id = %s");
         String sql = sb.toString();
         sql = String.format(sql, userId);
-        Query userQuery =  entityManager.createNativeQuery(sql,User.class);
+        Query userQuery = entityManager.createNativeQuery(sql, User.class);
         List users = userQuery.getResultList();
         return (User) users.get(0);
     }
 
     @Override
-    public Page<User> getUserListByUserName(String userName)  {
+    public Page<User> getUserListByUserName(String userName) {
 
-        int pageNo=0;
-        int pageSize=5;
-        PageRequest pageRequest=new PageRequest(pageNo, pageSize);
+        int pageNo = 0;
+        int pageSize = 5;
+        PageRequest pageRequest = new PageRequest(pageNo, pageSize);
 
         Specification<User> specification = (root, query, cb) -> {
-            Predicate predicateUserName=cb.like(root.get("username").as(String.class), "%"+userName+"%");
-            Predicate predicateUserPwd=cb.like(root.get("userpwd").as(String.class), "%"+userName+"%");
-            return cb.or(predicateUserName,predicateUserPwd);
+            Predicate predicateUserName = cb.like(root.get("username").as(String.class), "%" + userName + "%");
+            Predicate predicateUserPwd = cb.like(root.get("userpwd").as(String.class), "%" + userName + "%");
+            return cb.or(predicateUserName, predicateUserPwd);
         };
 
-        Page<User> users = userDao.findAll(specification,pageRequest);
+        Page<User> users = userDao.findAll(specification, pageRequest);
         return users;
     }
 
     @Override
-    public List<User> findUserListByUsernameAndUserPwd(String userName,String userPwd) throws Exception {
+    public List<User> findUserListByUsernameAndUserPwd(String userName, String userPwd) throws Exception {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = builder.createQuery(User.class);
         Root<User> root = query.from(User.class);
         Predicate usernamePredicate = null;
         Predicate userPwdPredicate = null;
-        if(!StringUtils.isEmpty(userName)){
+        if (!StringUtils.isEmpty(userName)) {
             usernamePredicate = builder.equal(root.get("username"), userName);
         }
-        if(!StringUtils.isEmpty(userPwd)){
+        if (!StringUtils.isEmpty(userPwd)) {
             userPwdPredicate = builder.equal(root.get("userpwd"), userPwd);
         }
         query.where(builder.or(usernamePredicate, userPwdPredicate));
         return entityManager.createQuery(query.select(root)).getResultList();
-    }
-
-    @Override
-    public List<User> findUserListByUserPwd(String userPwd) throws Exception {
-//        QUser user = QUser.user;
-//        JPAQuery<?> query = new JPAQuery<Void>(entityManager);
-//        JPAQuery<User> bob = query.select(user)
-//                .from(user)
-//                .where(user.userpwd.eq(userPwd))
-//                .fetchAll();
-       return null;
-
     }
 
     @Override

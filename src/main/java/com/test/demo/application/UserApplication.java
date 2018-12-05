@@ -16,8 +16,6 @@ public interface UserApplication {
 
     List<User> findUserListByUsernameAndUserPwd(String userName, String userPwd) throws Exception;
 
-    List<User> findUserListByUserPwd(String userPwd) throws Exception;
-
     User modUserNameById(Long id, String username, String newname) throws Exception;
 
 }
