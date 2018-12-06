@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@Api("ceshi")
+@Api(value = "测试",tags = "测试接口",description = "测试接口控制器")
 public class TestController {
     //private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
