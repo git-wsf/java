@@ -37,7 +37,7 @@ server:
       basedir: .
       accesslog:
         enabled: true
-        directory: log
+        directory: /weblog/logs/
         pattern: combined
         prefix: tomcat_access
   servlet-path: /
