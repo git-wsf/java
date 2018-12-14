@@ -27,8 +27,44 @@ spring:
       show-sql: true
       format-sql: true
   jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    joda-date-time-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
     serialization:
       indent-output: true
+  mvc:
+    servlet:
+      load-on-startup: 1
+    favicon:
+      enabled: false
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 10
+    lettuce:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1ms
+
+files:
+  path: ${file-path:d:/files}
+token:
+  expire:
+    seconds: 8640000
+  jwtSecret: JellyFish_%^*@#!_2018_&*7876
+
+validate:
+  product: Dysmsapi
+  domain: dysmsapi.aliyuncs.com
+  accessKeyId: LTAIzmtd6XjOmlCs
+  accessKeySecret:  Urz2QYFxJI69jh9hK578mciWMO5jaL
+  iosAppVersion: 1.0.0
+  androidAppVersion: 1.1.0
+  code:
+    count: 8
+    expireIn: 1800
 
 server:
   port: 8000

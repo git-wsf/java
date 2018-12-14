@@ -1,23 +1,28 @@
 package com.yangliuxin.repository;
 
-import com.yangliuxin.domain.User;
-import org.springframework.data.domain.Page;
+import com.yangliuxin.domain.SysUser;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserRepository  {
 
-    List<User> findAll() throws Exception;
+    int save(SysUser user);
 
-    User save(User user) throws Exception;
+    SysUser getById(Long id);
 
-    User getUserByUserId(Long userId) throws Exception;
+    SysUser getUser(String username);
 
-    Page<User> getUserListByUserName(String userName) throws Exception;
+    int changePassword(Long id, String password);
 
-    List<User> findUserListByUsernameAndUserPwd(String userName,String userPwd) throws Exception;
+    Integer count(Map<String, Object> params);
 
-    User modUserNameById(Long id,String username,String newname) throws Exception;
+    List<SysUser> list(Map<String, Object> params, Integer offset, Integer limit);
 
+    int deleteUserRole(Long userId);
+
+    int saveUserRoles(Long userId, List<Long> roleIds);
+
+    int update(SysUser user);
 
 }
