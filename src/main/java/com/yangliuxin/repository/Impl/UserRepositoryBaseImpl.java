@@ -2,6 +2,7 @@ package com.yangliuxin.repository.Impl;
 
 import com.yangliuxin.domain.SysUser;
 import com.yangliuxin.repository.UserRepository;
+import com.yangliuxin.repository.dao.SysRoleUserDao;
 import com.yangliuxin.repository.dao.UserDao;
 import jdk.nashorn.internal.runtime.Specialization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class UserRepositoryBaseImpl implements UserRepository {
     @Autowired
     private EntityManager entityManager;
 
-
-    private
+    @Autowired
+    private SysRoleUserDao sysRoleUserDao;
 
     @Override
     public int save(SysUser user) {
@@ -122,7 +123,7 @@ public class UserRepositoryBaseImpl implements UserRepository {
 
     @Override
     public int deleteUserRole(Long userId) {
-        return 0;
+        return sysRoleUserDao.deleteByUserId(userId);
     }
 
     @Override
