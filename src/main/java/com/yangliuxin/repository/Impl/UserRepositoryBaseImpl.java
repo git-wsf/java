@@ -1,10 +1,10 @@
 package com.yangliuxin.repository.Impl;
 
+import com.yangliuxin.domain.SysRoleUser;
 import com.yangliuxin.domain.SysUser;
 import com.yangliuxin.repository.UserRepository;
 import com.yangliuxin.repository.dao.SysRoleUserDao;
 import com.yangliuxin.repository.dao.UserDao;
-import jdk.nashorn.internal.runtime.Specialization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -128,11 +128,18 @@ public class UserRepositoryBaseImpl implements UserRepository {
 
     @Override
     public int saveUserRoles(Long userId, List<Long> roleIds) {
-        return 0;
+        for (Long roleId: roleIds) {
+            SysRoleUser sysRoleUser = new SysRoleUser();
+            sysRoleUser.setRoleId(roleId);
+            sysRoleUser.setUserId(userId);
+            sysRoleUserDao.save(sysRoleUser);
+        }
+        return 1;
     }
 
     @Override
     public int update(SysUser user) {
-        return 0;
+        if(userDao.save(user).equals(true)) return 1;
+        return  0;
     }
 }
