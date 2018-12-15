@@ -89,36 +89,44 @@ public class UserRepositoryBaseImpl implements UserRepository {
 //        List users = userQuery.getResultList();
 //        return (User) users.get(0);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("select count(*) from sys_user where 1 ");
-        getSqlByParamMap(params, sb);
-        String sql = sb.toString();
+        String sql = getSqlByParamMap(params,"count");
         Query userQuery = entityManager.createNativeQuery(sql, SysUser.class);
         return (Integer)userQuery.getSingleResult();
     }
 
     @Override
     public List<SysUser> list(Map<String, Object> params, Integer offset, Integer limit) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("select count(*) from sys_user where 1 ");
-        getSqlByParamMap(params, sb);
-        String sql = sb.toString();
+        String sql = getSqlByParamMap(params,"list");
         Query userQuery = entityManager.createNativeQuery(sql, SysUser.class);
         return userQuery.getResultList();
     }
 
-    private void getSqlByParamMap(Map<String, Object> params, StringBuilder sb) {
+    private String getSqlByParamMap(Map<String, Object> params,String action) {
+        StringBuilder sb = new StringBuilder();
+        if(action.equals("count")){
+            sb.append("select count(*) from sys_logs where 1 ");
+        } else {
+            sb.append("select * from sys_logs where 1 ");
+        }
+
         for (String key : params.keySet()) {
             if (!StringUtils.isEmpty(params.get(key))) {
                 if(key.equals("username") || key.equals("nickname")){
-                    sb.append("and " + key + " like '%"+params.get(key)+"%'");
+                    sb.append(" and ").append(key).append(" like '%").append(params.get(key)).append("%'");
                 }
                 if(key.equals("status")){
-                    sb.append("and status = "+params.get(key)+"");
+                    sb.append(" and status = ").append(params.get(key));
                 }
 
             }
         }
+        if(params.containsKey("orderBy") && !StringUtils.isEmpty(params.get("orderBy"))){
+            sb.append(" ").append(params.get("orderBy")).append(" ");
+        }
+        if(params.containsKey("offset") && params.containsKey("limit") && !StringUtils.isEmpty(params.get("offset")) && !StringUtils.isEmpty(params.get("limit"))){
+            sb.append(" limit ").append(params.get("offset")).append(",  ").append("limit");
+        }
+        return sb.toString();
     }
 
     @Override

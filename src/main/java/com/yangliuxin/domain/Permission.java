@@ -1,13 +1,17 @@
 package com.yangliuxin.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "sys_role_permission")
+@Table(name = "sys_permission")
 @Data
 public class Permission extends BaseEntity<Long> {
 
@@ -33,5 +37,8 @@ public class Permission extends BaseEntity<Long> {
 
 	@Column(name = "sort")
 	private Integer sort;
+
+	@Transient
+	private List<Permission> child;
 
 }

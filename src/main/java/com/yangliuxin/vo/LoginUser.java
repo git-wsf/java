@@ -1,8 +1,9 @@
 package com.yangliuxin.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.yangliuxin.model.Permission;
-import com.yangliuxin.model.SysUser;
+import com.yangliuxin.domain.Permission;
+import com.yangliuxin.domain.SysUser;
+import com.yangliuxin.enums.UserStatusEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -61,7 +62,7 @@ public class LoginUser extends SysUser implements UserDetails {
 	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
-		return getStatus() != Status.LOCKED;
+		return !getStatus().equals(UserStatusEnum.LOCKED.getValue()) ;
 	}
 
 	// 密码是否未过期

@@ -29,7 +29,6 @@ public class SwaggerConfig {
                 .title("api文档")
                 .description("restfun 风格接口")
                 .version("1.0")
-                .contact(new Contact("风清扬", "url", "email"))
                 .build();
     }
 }

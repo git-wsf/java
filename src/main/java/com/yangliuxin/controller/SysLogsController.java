@@ -1,12 +1,12 @@
 package com.yangliuxin.controller;
 
-import com.yangliuxin.dao.SysLogsDao;
-import com.yangliuxin.model.SysLogs;
+import com.yangliuxin.domain.SysLogs;
 import com.yangliuxin.page.PageTableHandler;
 import com.yangliuxin.page.PageTableHandler.CountHandler;
 import com.yangliuxin.page.PageTableHandler.ListHandler;
 import com.yangliuxin.page.PageTableRequest;
 import com.yangliuxin.page.PageTableResponse;
+import com.yangliuxin.repository.SysLogsRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.List;
 public class SysLogsController {
 
 	@Autowired
-	private SysLogsDao sysLogsDao;
+	private SysLogsRepository sysLogsRepository;
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('sys:log:query')")
@@ -33,13 +33,13 @@ public class SysLogsController {
 
 			@Override
 			public int count(PageTableRequest request) {
-				return sysLogsDao.count(request.getParams());
+				return sysLogsRepository.count(request.getParams());
 			}
 		}, new ListHandler() {
 
 			@Override
 			public List<SysLogs> list(PageTableRequest request) {
-				return sysLogsDao.list(request.getParams(), request.getOffset(), request.getLimit());
+				return sysLogsRepository.list(request.getParams(), request.getOffset(), request.getLimit());
 			}
 		}).handle(request);
 	}

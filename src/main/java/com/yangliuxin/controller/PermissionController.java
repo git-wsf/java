@@ -2,13 +2,13 @@ package com.yangliuxin.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yangliuxin.annotation.LogAnnotation;
-import com.yangliuxin.dao.PermissionDao;
-import com.yangliuxin.vo.LoginUser;
-import com.yangliuxin.model.Permission;
-import com.yangliuxin.service.PermissionService;
-import com.yangliuxin.utils.UserUtil;
 import com.google.common.collect.Lists;
+import com.yangliuxin.annotation.LogAnnotation;
+import com.yangliuxin.application.PermissionService;
+import com.yangliuxin.domain.Permission;
+import com.yangliuxin.repository.PermissionRepository;
+import com.yangliuxin.utils.UserUtil;
+import com.yangliuxin.vo.LoginUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class PermissionController {
 
 	@Autowired
-	private PermissionDao permissionDao;
+	private PermissionRepository permissionRepository;
 	@Autowired
 	private PermissionService permissionService;
 
@@ -70,7 +70,6 @@ public class PermissionController {
 			});
 		}
 	}
-
 //	private void setChild(List<Permission> permissions) {
 //		permissions.parallelStream().forEach(per -> {
 //			List<Permission> child = permissions.stream().filter(p -> p.getParentId().equals(per.getId()))
@@ -78,6 +77,7 @@ public class PermissionController {
 //			per.setChild(child);
 //		});
 //	}
+
 
 	/**
 	 * 菜单列表
@@ -101,7 +101,7 @@ public class PermissionController {
 	@ApiOperation(value = "菜单列表")
 	@PreAuthorize("hasAuthority('sys:menu:query')")
 	public List<Permission> permissionsList() {
-		List<Permission> permissionsAll = permissionDao.listAll();
+		List<Permission> permissionsAll = permissionRepository.listAll();
 
 		List<Permission> list = Lists.newArrayList();
 		setPermissionsList(0L, permissionsAll, list);
@@ -113,7 +113,7 @@ public class PermissionController {
 	@ApiOperation(value = "所有菜单")
 	@PreAuthorize("hasAuthority('sys:menu:query')")
 	public JSONArray permissionsAll() {
-		List<Permission> permissionsAll = permissionDao.listAll();
+		List<Permission> permissionsAll = permissionRepository.listAll();
 		JSONArray array = new JSONArray();
 		setPermissionsTree(0L, permissionsAll, array);
 
@@ -124,7 +124,7 @@ public class PermissionController {
 	@ApiOperation(value = "一级菜单")
 	@PreAuthorize("hasAuthority('sys:menu:query')")
 	public List<Permission> parentMenu() {
-		List<Permission> parents = permissionDao.listParents();
+		List<Permission> parents = permissionRepository.listParents();
 
 		return parents;
 	}
@@ -156,7 +156,7 @@ public class PermissionController {
 	@ApiOperation(value = "根据角色id获取权限")
 	@PreAuthorize("hasAnyAuthority('sys:menu:query','sys:role:query')")
 	public List<Permission> listByRoleId(Long roleId) {
-		return permissionDao.listByRoleId(roleId);
+		return permissionRepository.listByRoleId(roleId);
 	}
 
 	@LogAnnotation
@@ -164,14 +164,14 @@ public class PermissionController {
 	@ApiOperation(value = "保存菜单")
 	@PreAuthorize("hasAuthority('sys:menu:add')")
 	public void save(@RequestBody Permission permission) {
-		permissionDao.save(permission);
+		permissionRepository.save(permission);
 	}
 
 	@GetMapping("/{id}")
 	@ApiOperation(value = "根据菜单id获取菜单")
 	@PreAuthorize("hasAuthority('sys:menu:query')")
 	public Permission get(@PathVariable Long id) {
-		return permissionDao.getById(id);
+		return permissionRepository.getById(id);
 	}
 
 	@LogAnnotation

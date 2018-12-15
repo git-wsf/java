@@ -1,20 +1,18 @@
 package com.yangliuxin.application.Impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yangliuxin.repository.dao.TokenDao;
-import com.yangliuxin.vo.LoginUser;
-import com.yangliuxin.vo.Token;
-import com.yangliuxin.domain.TokenModel;
 import com.yangliuxin.application.SysLogService;
 import com.yangliuxin.application.TokenService;
+import com.yangliuxin.domain.TokenModel;
+import com.yangliuxin.repository.TokenRepository;
+import com.yangliuxin.vo.LoginUser;
+import com.yangliuxin.vo.Token;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,12 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * token存到数据库的实现类
- * 
- * @author Listen Young lxyang_21@163.com
- *
- */
 @Service
 @Slf4j
 public class TokenServiceDbImpl implements TokenService {
@@ -44,7 +36,7 @@ public class TokenServiceDbImpl implements TokenService {
 	private Integer expireSeconds;
 
 	@Autowired
-	private TokenDao tokenDao;
+	private TokenRepository tokenRepository;
 
 	@Autowired
 	private SysLogService sysLogService;
@@ -70,7 +62,7 @@ public class TokenServiceDbImpl implements TokenService {
 		model.setExpireTime(new Date(loginUser.getExpireTime()));
 		model.setVal(JSONObject.toJSONString(loginUser));
 
-		tokenDao.save(model);
+		tokenRepository.save(model);
 		// 登陆日志
 		sysLogService.save(loginUser.getId(), "登陆", true, null);
 
@@ -100,19 +92,19 @@ public class TokenServiceDbImpl implements TokenService {
 		loginUser.setLoginTime(System.currentTimeMillis());
 		loginUser.setExpireTime(loginUser.getLoginTime() + expireSeconds * 1000);
 
-		TokenModel model = tokenDao.getById(loginUser.getToken());
+		TokenModel model = tokenRepository.getById(loginUser.getToken());
 		model.setUpdateTime(new Date());
 		model.setExpireTime(new Date(loginUser.getExpireTime()));
 		model.setVal(JSONObject.toJSONString(loginUser));
 
-		tokenDao.update(model);
+		tokenRepository.update(model);
 	}
 
 	@Override
 	public LoginUser getLoginUser(String jwtToken) {
 		String uuid = getUUIDFromJWT(jwtToken);
 		if (uuid != null) {
-			TokenModel model = tokenDao.getById(uuid);
+			TokenModel model = tokenRepository.getById(uuid);
 			return toLoginUser(model);
 		}
 
@@ -123,11 +115,11 @@ public class TokenServiceDbImpl implements TokenService {
 	public boolean deleteToken(String jwtToken) {
 		String uuid = getUUIDFromJWT(jwtToken);
 		if (uuid != null) {
-			TokenModel model = tokenDao.getById(uuid);
+			TokenModel model = tokenRepository.getById(uuid);
 			LoginUser loginUser = toLoginUser(model);
 			if (loginUser != null) {
-				tokenDao.delete(uuid);
-				logService.save(loginUser.getId(), "退出", true, null);
+				tokenRepository.delete(uuid);
+				sysLogService.save(loginUser.getId(), "退出", true, null);
 
 				return true;
 			}

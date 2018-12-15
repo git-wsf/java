@@ -6,7 +6,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/DB_YANGLIUXIN?useUnicode=true&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
-    password: yangliuxin
+    password: cae981b191
     initialSize: 1
     minIdle: 10
     maxActive: 10
@@ -40,7 +40,7 @@ spring:
   redis:
     host: localhost
     port: 6379
-    timeout: 10
+    timeout: 20
     lettuce:
       pool:
         min-idle: 0

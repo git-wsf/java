@@ -1,14 +1,7 @@
 package com.yangliuxin.application;
 
-import com.yangliuxin.model.SysLogs;
+import com.yangliuxin.domain.SysLogs;
 
-/**
- * 日志service
- * 
- * @author Listen Young lxyang_21@163.com
- *
- *         2017年8月19日
- */
 public interface SysLogService {
 
 	void save(SysLogs sysLogs);

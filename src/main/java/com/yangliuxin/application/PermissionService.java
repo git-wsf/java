@@ -1,6 +1,6 @@
 package com.yangliuxin.application;
 
-import com.yangliuxin.model.Permission;
+import com.yangliuxin.domain.Permission;
 
 public interface PermissionService {
 

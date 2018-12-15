@@ -1,9 +1,11 @@
 package com.yangliuxin.application.Impl;
 
 import com.yangliuxin.application.UserService;
+import com.yangliuxin.domain.SysUser;
+import com.yangliuxin.enums.UserStatusEnum;
+import com.yangliuxin.repository.UserRepository;
 import com.yangliuxin.vo.UserDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,12 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
-	private static final Logger log = LoggerFactory.getLogger("adminLogger");
 
 	@Autowired
-	private UserDao userDao;
+	private UserRepository userRepository;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
@@ -27,8 +29,8 @@ public class UserServiceImpl implements UserService {
 	public SysUser saveUser(UserDto userDto) {
 		SysUser user = userDto;
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setStatus(Status.VALID);
-		userDao.save(user);
+		user.setStatus(UserStatusEnum.VALID.getValue());
+		userRepository.save(user);
 		saveUserRoles(user.getId(), userDto.getRoleIds());
 
 		log.debug("新增用户{}", user.getUsername());
@@ -37,21 +39,21 @@ public class UserServiceImpl implements UserService {
 
 	private void saveUserRoles(Long userId, List<Long> roleIds) {
 		if (roleIds != null) {
-			userDao.deleteUserRole(userId);
+			userRepository.deleteUserRole(userId);
 			if (!CollectionUtils.isEmpty(roleIds)) {
-				userDao.saveUserRoles(userId, roleIds);
+				userRepository.saveUserRoles(userId, roleIds);
 			}
 		}
 	}
 
 	@Override
 	public SysUser getUser(String username) {
-		return userDao.getUser(username);
+		return userRepository.getUser(username);
 	}
 
 	@Override
 	public void changePassword(String username, String oldPassword, String newPassword) {
-		SysUser u = userDao.getUser(username);
+		SysUser u = userRepository.getUser(username);
 		if (u == null) {
 			throw new IllegalArgumentException("用户不存在");
 		}
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
 			throw new IllegalArgumentException("旧密码错误");
 		}
 
-		userDao.changePassword(u.getId(), passwordEncoder.encode(newPassword));
+		userRepository.changePassword(u.getId(), passwordEncoder.encode(newPassword));
 
 		log.debug("修改{}的密码", username);
 	}
@@ -68,7 +70,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public SysUser updateUser(UserDto userDto) {
-		userDao.update(userDto);
+		userRepository.update(userDto);
 		saveUserRoles(userDto.getId(), userDto.getRoleIds());
 
 		return userDto;

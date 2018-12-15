@@ -1,8 +1,8 @@
 package com.yangliuxin.application.Impl;
 
-import com.yangliuxin.dao.FileInfoDao;
-import com.yangliuxin.model.FileInfo;
-import com.yangliuxin.service.FileService;
+import com.yangliuxin.application.FileService;
+import com.yangliuxin.domain.FileInfo;
+import com.yangliuxin.repository.FileInfoRepository;
 import com.yangliuxin.utils.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class FileServiceImpl implements FileService {
 	@Value("${files.path}")
 	private String filesPath;
 	@Autowired
-	private FileInfoDao fileInfoDao;
+	private FileInfoRepository fileInfoRepository;
 
 	@Override
 	public FileInfo save(MultipartFile file) throws IOException {
@@ -31,9 +31,9 @@ public class FileServiceImpl implements FileService {
 		}
 
 		String md5 = FileUtil.fileMd5(file.getInputStream());
-		FileInfo fileInfo = fileInfoDao.getById(md5);
+		FileInfo fileInfo = fileInfoRepository.getById(md5);
 		if (fileInfo != null) {
-			fileInfoDao.update(fileInfo);
+			fileInfoRepository.update(fileInfo);
 			return fileInfo;
 		}
 
@@ -53,7 +53,7 @@ public class FileServiceImpl implements FileService {
 		fileInfo.setUrl(pathname);
 		fileInfo.setType(contentType.startsWith("image/") ? 1 : 0);
 
-		fileInfoDao.save(fileInfo);
+		fileInfoRepository.save(fileInfo);
 
 		log.debug("上传文件{}", fullPath);
 
@@ -63,12 +63,12 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public void delete(String id) {
-		FileInfo fileInfo = fileInfoDao.getById(id);
+		FileInfo fileInfo = fileInfoRepository.getById(id);
 		if (fileInfo != null) {
 			String fullPath = fileInfo.getPath();
 			FileUtil.deleteFile(fullPath);
 
-			fileInfoDao.delete(id);
+			fileInfoRepository.delete(id);
 			log.debug("删除文件：{}", fileInfo.getPath());
 		}
 	}

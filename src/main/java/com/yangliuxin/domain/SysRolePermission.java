@@ -1,20 +1,41 @@
 package com.yangliuxin.domain;
 
 
+import com.sun.xml.internal.ws.developer.Serialization;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "sys_role_permission")
 @Data
-public class SysRolePermission {
+@Serialization
+@EqualsAndHashCode
+@IdClass(SysRolePermissionPK.class)
+public class SysRolePermission implements Serializable {
+
+
+    private static final long serialVersionUID = 5583231182173825915L;
 
     @Column(name = "permissionId")
+    @Id
     private Long permissionId;
 
     @Column(name = "roleId")
+    @Id
+    private Long roleId;
+}
+
+class SysRolePermissionPK implements Serializable {
+
+
+    @Column(name = "permissionId")
+    @Basic
+    private Long permissionId;
+
+    @Column(name = "roleId")
+    @Basic
     private Long roleId;
 }

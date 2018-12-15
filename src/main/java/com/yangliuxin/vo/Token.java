@@ -2,13 +2,7 @@ package com.yangliuxin.vo;
 
 import java.io.Serializable;
 
-/**
- * Restful方式登陆token
- * 
- * @author Listen Young lxyang_21@163.com
- *
- *         2017年8月4日
- */
+
 public class Token implements Serializable {
 
 	private static final long serialVersionUID = 6314027741784310221L;

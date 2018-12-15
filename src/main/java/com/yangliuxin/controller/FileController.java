@@ -1,16 +1,16 @@
 package com.yangliuxin.controller;
 
 import com.yangliuxin.annotation.LogAnnotation;
-import com.yangliuxin.dao.FileInfoDao;
-import com.yangliuxin.vo.LayuiFile;
-import com.yangliuxin.vo.LayuiFile.LayuiFileData;
-import com.yangliuxin.model.FileInfo;
+import com.yangliuxin.application.FileService;
+import com.yangliuxin.domain.FileInfo;
 import com.yangliuxin.page.PageTableHandler;
 import com.yangliuxin.page.PageTableHandler.CountHandler;
 import com.yangliuxin.page.PageTableHandler.ListHandler;
 import com.yangliuxin.page.PageTableRequest;
 import com.yangliuxin.page.PageTableResponse;
-import com.yangliuxin.service.FileService;
+import com.yangliuxin.repository.FileInfoRepository;
+import com.yangliuxin.vo.LayuiFile;
+import com.yangliuxin.vo.LayuiFile.LayuiFileData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class FileController {
 	@Autowired
 	private FileService fileService;
 	@Autowired
-	private FileInfoDao fileInfoDao;
+	private FileInfoRepository fileInfoRepository;
 
 	@LogAnnotation
 	@PostMapping
@@ -70,13 +70,13 @@ public class FileController {
 
 			@Override
 			public int count(PageTableRequest request) {
-				return fileInfoDao.count(request.getParams());
+				return fileInfoRepository.count(request.getParams());
 			}
 		}, new ListHandler() {
 
 			@Override
 			public List<FileInfo> list(PageTableRequest request) {
-				List<FileInfo> list = fileInfoDao.list(request.getParams(), request.getOffset(), request.getLimit());
+				List<FileInfo> list = fileInfoRepository.list(request.getParams(), request.getOffset(), request.getLimit());
 				return list;
 			}
 		}).handle(request);

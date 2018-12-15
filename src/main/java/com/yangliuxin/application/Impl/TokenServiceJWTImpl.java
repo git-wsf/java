@@ -1,9 +1,9 @@
 package com.yangliuxin.application.Impl;
 
+import com.yangliuxin.application.SysLogService;
+import com.yangliuxin.application.TokenService;
 import com.yangliuxin.vo.LoginUser;
 import com.yangliuxin.vo.Token;
-import com.yangliuxin.service.SysLogService;
-import com.yangliuxin.service.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -45,7 +45,7 @@ public class TokenServiceJWTImpl implements TokenService {
 	@Autowired
 	private RedisTemplate<String, LoginUser> redisTemplate;
 	@Autowired
-	private SysLogService logService;
+	private SysLogService sysLogService;
 	/**
 	 * 私钥
 	 */
@@ -60,7 +60,7 @@ public class TokenServiceJWTImpl implements TokenService {
 		loginUser.setToken(StringUtils.upperCase(loginUser.getUsername()));
 		cacheLoginUser(loginUser);
 		// 登陆日志
-		logService.save(loginUser.getId(), "登陆", true, null);
+		sysLogService.save(loginUser.getId(), "登陆", true, null);
 
 		String jwtToken = createJWTToken(loginUser);
 
@@ -117,7 +117,7 @@ public class TokenServiceJWTImpl implements TokenService {
 			if (loginUser != null) {
 				redisTemplate.delete(key);
 				// 退出日志
-				logService.save(loginUser.getId(), "退出", true, null);
+				sysLogService.save(loginUser.getId(), "退出", true, null);
 
 				return true;
 			}

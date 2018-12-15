@@ -1,9 +1,9 @@
 package com.yangliuxin.application.Impl;
 
-import com.yangliuxin.dao.RoleDao;
+import com.yangliuxin.application.RoleService;
+import com.yangliuxin.domain.Role;
+import com.yangliuxin.repository.RoleRepository;
 import com.yangliuxin.vo.RoleDto;
-import com.yangliuxin.model.Role;
-import com.yangliuxin.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class RoleServiceImpl implements RoleService {
 	private static final Logger log = LoggerFactory.getLogger("adminLogger");
 
 	@Autowired
-	private RoleDao roleDao;
+	private RoleRepository roleRepository;
 
 	@Override
 	@Transactional
@@ -36,29 +36,29 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	private void saveRole(Role role, List<Long> permissionIds) {
-		Role r = roleDao.getRole(role.getName());
+		Role r = roleRepository.getRole(role.getName());
 		if (r != null) {
 			throw new IllegalArgumentException(role.getName() + "已存在");
 		}
 
-		roleDao.save(role);
+		roleRepository.save(role);
 		if (!CollectionUtils.isEmpty(permissionIds)) {
-			roleDao.saveRolePermission(role.getId(), permissionIds);
+			roleRepository.saveRolePermission(role.getId(), permissionIds);
 		}
 		log.debug("新增角色{}", role.getName());
 	}
 
 	private void updateRole(Role role, List<Long> permissionIds) {
-		Role r = roleDao.getRole(role.getName());
+		Role r = roleRepository.getRole(role.getName());
 		if (r != null && r.getId() != role.getId()) {
 			throw new IllegalArgumentException(role.getName() + "已存在");
 		}
 
-		roleDao.update(role);
+		roleRepository.update(role);
 
-		roleDao.deleteRolePermission(role.getId());
+		roleRepository.deleteRolePermission(role.getId());
 		if (!CollectionUtils.isEmpty(permissionIds)) {
-			roleDao.saveRolePermission(role.getId(), permissionIds);
+			roleRepository.saveRolePermission(role.getId(), permissionIds);
 		}
 		log.debug("修改角色{}", role.getName());
 	}
@@ -66,9 +66,9 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@Transactional
 	public void deleteRole(Long id) {
-		roleDao.deleteRolePermission(id);
-		roleDao.deleteRoleUser(id);
-		roleDao.delete(id);
+		roleRepository.deleteRolePermission(id);
+		roleRepository.deleteRoleUser(id);
+		roleRepository.delete(id);
 
 		log.debug("删除角色id:{}", id);
 	}

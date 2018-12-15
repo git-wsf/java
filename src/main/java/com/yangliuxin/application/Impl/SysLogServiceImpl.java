@@ -1,10 +1,9 @@
 package com.yangliuxin.application.Impl;
 
-import com.yangliuxin.advice.LogAdvice;
-import com.yangliuxin.dao.SysLogsDao;
-import com.yangliuxin.model.SysLogs;
-import com.yangliuxin.model.SysUser;
-import com.yangliuxin.service.SysLogService;
+import com.yangliuxin.application.SysLogService;
+import com.yangliuxin.domain.SysLogs;
+import com.yangliuxin.domain.SysUser;
+import com.yangliuxin.repository.SysLogsRepository;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -21,24 +20,16 @@ public class SysLogServiceImpl implements SysLogService {
 	private static final Logger log = LoggerFactory.getLogger("adminLogger");
 
 	@Autowired
-	private SysLogsDao sysLogsDao;
+	private SysLogsRepository sysLogsRepository;
 
-	/**
-	 * 2018.05.12将该方法改为异步,用户由调用者设置
-	 *
-	 * @param sysLogs
-	 * @see LogAdvice
-	 */
 	@Async
 	@Override
 	public void save(SysLogs sysLogs) {
-//		SysUser user = UserUtil.getLoginUser();
+
 		if (sysLogs == null || sysLogs.getUser() == null || sysLogs.getUser().getId() == null) {
 			return;
 		}
-
-//		sysLogs.setUser(user);
-		sysLogsDao.save(sysLogs);
+		sysLogsRepository.save(sysLogs);
 	}
 
 	@Async
@@ -53,7 +44,7 @@ public class SysLogServiceImpl implements SysLogService {
 		user.setId(userId);
 		sysLogs.setUser(user);
 
-		sysLogsDao.save(sysLogs);
+		sysLogsRepository.save(sysLogs);
 
 	}
 
@@ -62,7 +53,7 @@ public class SysLogServiceImpl implements SysLogService {
 		Date date = DateUtils.addMonths(new Date(), -3);
 		String time = DateFormatUtils.format(date, DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.getPattern());
 
-		int n = sysLogsDao.deleteLogs(time);
+		int n = sysLogsRepository.deleteLogs(time);
 		log.info("删除{}之前日志{}条", time, n);
 	}
 }

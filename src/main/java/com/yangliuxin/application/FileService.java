@@ -1,6 +1,6 @@
 package com.yangliuxin.application;
 
-import com.yangliuxin.model.FileInfo;
+import com.yangliuxin.domain.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

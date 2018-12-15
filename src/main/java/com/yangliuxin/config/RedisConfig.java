@@ -23,6 +23,4 @@ public class RedisConfig {
 
 		return redis;
 	}
-
-
 }

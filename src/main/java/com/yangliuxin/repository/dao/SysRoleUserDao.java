@@ -1,6 +1,5 @@
 package com.yangliuxin.repository.dao;
 
-import com.yangliuxin.domain.SysLogs;
 import com.yangliuxin.domain.SysRoleUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -13,7 +12,7 @@ public interface SysRoleUserDao  extends JpaRepository<SysRoleUser, Long>, JpaSp
 
     @Modifying
     @Transactional
-    @Query("delete from sys_role_user where userId = ?1")
+    @Query(value = "delete from sys_role_user where userId = ?1",nativeQuery = true)
     int deleteByUserId(Long userId);
 
 

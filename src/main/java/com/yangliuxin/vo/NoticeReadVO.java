@@ -1,6 +1,6 @@
 package com.yangliuxin.vo;
 
-import com.yangliuxin.model.Notice;
+import com.yangliuxin.domain.Notice;
 
 import java.util.Date;
 

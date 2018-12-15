@@ -1,6 +1,6 @@
 package com.yangliuxin.vo;
 
-import com.yangliuxin.model.Role;
+import com.yangliuxin.domain.Role;
 
 import java.util.List;
 

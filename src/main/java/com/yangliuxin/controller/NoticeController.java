@@ -1,18 +1,18 @@
 package com.yangliuxin.controller;
 
 import com.yangliuxin.annotation.LogAnnotation;
-import com.yangliuxin.dao.NoticeDao;
-import com.yangliuxin.vo.NoticeReadVO;
-import com.yangliuxin.vo.NoticeVO;
-import com.yangliuxin.model.Notice;
-import com.yangliuxin.model.Notice.Status;
-import com.yangliuxin.model.SysUser;
+import com.yangliuxin.domain.Notice;
+import com.yangliuxin.domain.SysUser;
+import com.yangliuxin.enums.NoticeStatusEnum;
 import com.yangliuxin.page.PageTableHandler;
 import com.yangliuxin.page.PageTableHandler.CountHandler;
 import com.yangliuxin.page.PageTableHandler.ListHandler;
 import com.yangliuxin.page.PageTableRequest;
 import com.yangliuxin.page.PageTableResponse;
+import com.yangliuxin.repository.NoticeRepository;
 import com.yangliuxin.utils.UserUtil;
+import com.yangliuxin.vo.NoticeReadVO;
+import com.yangliuxin.vo.NoticeVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +27,14 @@ import java.util.List;
 public class NoticeController {
 
 	@Autowired
-	private NoticeDao noticeDao;
+	private NoticeRepository noticeRepository;
 
 	@LogAnnotation
 	@PostMapping
 	@ApiOperation(value = "保存公告")
 	@PreAuthorize("hasAuthority('notice:add')")
 	public Notice saveNotice(@RequestBody Notice notice) {
-		noticeDao.save(notice);
+		noticeRepository.save(notice);
 
 		return notice;
 	}
@@ -43,22 +43,22 @@ public class NoticeController {
 	@ApiOperation(value = "根据id获取公告")
 	@PreAuthorize("hasAuthority('notice:query')")
 	public Notice get(@PathVariable Long id) {
-		return noticeDao.getById(id);
+		return noticeRepository.getById(id);
 	}
 
 	@GetMapping(params = "id")
 	public NoticeVO readNotice(Long id) {
 		NoticeVO vo = new NoticeVO();
 
-		Notice notice = noticeDao.getById(id);
-		if (notice == null || notice.getStatus() == Status.DRAFT) {
+		Notice notice = noticeRepository.getById(id);
+		if (notice == null || notice.getStatus() == NoticeStatusEnum.DRAFT.getValue()) {
 			return vo;
 		}
 		vo.setNotice(notice);
 
-		noticeDao.saveReadRecord(notice.getId(), UserUtil.getLoginUser().getId());
+		noticeRepository.saveReadRecord(notice.getId(), UserUtil.getLoginUser().getId());
 
-		List<SysUser> users = noticeDao.listReadUsers(id);
+		List<SysUser> users = noticeRepository.listReadUsers(id);
 		vo.setUsers(users);
 
 		return vo;
@@ -69,11 +69,11 @@ public class NoticeController {
 	@ApiOperation(value = "修改公告")
 	@PreAuthorize("hasAuthority('notice:add')")
 	public Notice updateNotice(@RequestBody Notice notice) {
-		Notice no = noticeDao.getById(notice.getId());
-		if (no.getStatus() == Status.PUBLISH) {
+		Notice no = noticeRepository.getById(notice.getId());
+		if (no.getStatus() == NoticeStatusEnum.PUBLISH.getValue()) {
 			throw new IllegalArgumentException("发布状态的不能修改");
 		}
-		noticeDao.update(notice);
+		noticeRepository.update(notice);
 
 		return notice;
 	}
@@ -86,13 +86,13 @@ public class NoticeController {
 
 			@Override
 			public int count(PageTableRequest request) {
-				return noticeDao.count(request.getParams());
+				return noticeRepository.count(request.getParams());
 			}
 		}, new ListHandler() {
 
 			@Override
 			public List<Notice> list(PageTableRequest request) {
-				return noticeDao.list(request.getParams(), request.getOffset(), request.getLimit());
+				return noticeRepository.list(request.getParams(), request.getOffset(), request.getLimit());
 			}
 		}).handle(request);
 	}
@@ -102,14 +102,14 @@ public class NoticeController {
 	@ApiOperation(value = "删除公告")
 	@PreAuthorize("hasAuthority('notice:del')")
 	public void delete(@PathVariable Long id) {
-		noticeDao.delete(id);
+		noticeRepository.delete(id);
 	}
 
 	@ApiOperation(value = "未读公告数")
 	@GetMapping("/count-unread")
 	public Integer countUnread() {
 		SysUser user = UserUtil.getLoginUser();
-		return noticeDao.countUnread(user.getId());
+		return noticeRepository.countUnread(user.getId());
 	}
 
 	@GetMapping("/published")
@@ -121,13 +121,13 @@ public class NoticeController {
 
 			@Override
 			public int count(PageTableRequest request) {
-				return noticeDao.countNotice(request.getParams());
+				return noticeRepository.countNotice(request.getParams());
 			}
 		}, new ListHandler() {
 
 			@Override
 			public List<NoticeReadVO> list(PageTableRequest request) {
-				return noticeDao.listNotice(request.getParams(), request.getOffset(), request.getLimit());
+				return noticeRepository.listNotice(request.getParams(), request.getOffset(), request.getLimit());
 			}
 		}).handle(request);
 	}
