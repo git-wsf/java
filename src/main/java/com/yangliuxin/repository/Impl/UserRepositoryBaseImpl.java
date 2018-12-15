@@ -40,7 +40,8 @@ public class UserRepositoryBaseImpl implements UserRepository {
 
     @Override
     public SysUser getUser(String username) {
-        return userDao.getSysUserByUsername(username);
+        SysUser user = userDao.findByUsername(username);
+        return user;
     }
 
     @Override
@@ -89,42 +90,50 @@ public class UserRepositoryBaseImpl implements UserRepository {
 //        List users = userQuery.getResultList();
 //        return (User) users.get(0);
 
-        String sql = getSqlByParamMap(params,"count");
-        Query userQuery = entityManager.createNativeQuery(sql, SysUser.class);
-        return (Integer)userQuery.getSingleResult();
+        String sql = getSqlByParamMap(params,"count",0,0);
+        Query userQuery = entityManager.createNativeQuery(sql);
+        Object count =  userQuery.getSingleResult();
+        Integer countStaff = Integer.valueOf(count.toString());
+        return (Integer) countStaff;
     }
 
     @Override
     public List<SysUser> list(Map<String, Object> params, Integer offset, Integer limit) {
-        String sql = getSqlByParamMap(params,"list");
+        String sql = getSqlByParamMap(params,"list", offset,limit);
         Query userQuery = entityManager.createNativeQuery(sql, SysUser.class);
         return userQuery.getResultList();
     }
 
-    private String getSqlByParamMap(Map<String, Object> params,String action) {
+    private String getSqlByParamMap(Map<String, Object> params,String action, Integer offset, Integer limit) {
         StringBuilder sb = new StringBuilder();
         if(action.equals("count")){
-            sb.append("select count(*) from sys_logs where 1 ");
+            sb.append("select count(*) as count from sys_user where 1 ");
         } else {
-            sb.append("select * from sys_logs where 1 ");
+            sb.append("select * from sys_user where 1 ");
         }
 
-        for (String key : params.keySet()) {
-            if (!StringUtils.isEmpty(params.get(key))) {
-                if(key.equals("username") || key.equals("nickname")){
-                    sb.append(" and ").append(key).append(" like '%").append(params.get(key)).append("%'");
-                }
-                if(key.equals("status")){
-                    sb.append(" and status = ").append(params.get(key));
-                }
+        if(params != null) {
+            for (String key : params.keySet()) {
+                if (!StringUtils.isEmpty(params.get(key))) {
+                    if (key.equals("username") || key.equals("nickname")) {
+                        sb.append(" and ").append(key).append(" like '%").append(params.get(key)).append("%'");
+                    }
+                    if (key.equals("status")) {
+                        sb.append(" and status = ").append(params.get(key));
+                    }
 
+                }
             }
-        }
-        if(params.containsKey("orderBy") && !StringUtils.isEmpty(params.get("orderBy"))){
-            sb.append(" ").append(params.get("orderBy")).append(" ");
-        }
-        if(params.containsKey("offset") && params.containsKey("limit") && !StringUtils.isEmpty(params.get("offset")) && !StringUtils.isEmpty(params.get("limit"))){
-            sb.append(" limit ").append(params.get("offset")).append(",  ").append("limit");
+            if (params.containsKey("orderBy") && !StringUtils.isEmpty(params.get("orderBy"))) {
+                sb.append(" ").append(params.get("orderBy")).append(" ");
+            }
+            if (offset > 0) {
+                sb.append(" limit ").append(offset);
+            }
+
+            if (limit > 0) {
+                sb.append(",  ").append(limit);
+            }
         }
         return sb.toString();
     }
@@ -147,7 +156,7 @@ public class UserRepositoryBaseImpl implements UserRepository {
 
     @Override
     public int update(SysUser user) {
-        if(userDao.save(user).equals(true)) return 1;
-        return  0;
+        userDao.save(user);
+        return  1;
     }
 }

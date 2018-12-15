@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void changePassword(String username, String oldPassword, String newPassword) {
+	public void changePassword (String username, String oldPassword, String newPassword) throws Exception {
 		SysUser u = userRepository.getUser(username);
 		if (u == null) {
 			throw new IllegalArgumentException("用户不存在");
@@ -70,7 +70,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public SysUser updateUser(UserDto userDto) {
-		userRepository.update(userDto);
+		SysUser sysUser = userRepository.getById(userDto.getId());
+		sysUser.setBirthday(userDto.getBirthday());
+		sysUser.setEmail(userDto.getEmail());
+		sysUser.setHeadImgUrl(userDto.getHeadImgUrl());
+		sysUser.setNickname(userDto.getNickname());
+		sysUser.setPhone(userDto.getPhone());
+		sysUser.setSex(userDto.getSex());
+		sysUser.setTelephone(userDto.getTelephone());
+		sysUser.setId(userDto.getId());
+		userRepository.update(sysUser);
 		saveUserRoles(userDto.getId(), userDto.getRoleIds());
 
 		return userDto;

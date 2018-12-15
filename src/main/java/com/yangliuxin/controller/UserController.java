@@ -3,6 +3,7 @@ package com.yangliuxin.controller;
 import com.yangliuxin.annotation.LogAnnotation;
 import com.yangliuxin.application.UserService;
 import com.yangliuxin.domain.SysUser;
+import com.yangliuxin.enums.WebCodeEnum;
 import com.yangliuxin.page.PageTableHandler;
 import com.yangliuxin.page.PageTableHandler.CountHandler;
 import com.yangliuxin.page.PageTableHandler.ListHandler;
@@ -10,6 +11,7 @@ import com.yangliuxin.page.PageTableRequest;
 import com.yangliuxin.page.PageTableResponse;
 import com.yangliuxin.repository.UserRepository;
 import com.yangliuxin.utils.UserUtil;
+import com.yangliuxin.vo.ResultVo;
 import com.yangliuxin.vo.UserDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -72,8 +74,11 @@ public class UserController {
 	@PutMapping("/{username}")
 	@ApiOperation(value = "修改密码")
 	@PreAuthorize("hasAuthority('sys:user:password')")
-	public void changePassword(@PathVariable String username, String oldPassword, String newPassword) {
+	public ResultVo<Boolean> changePassword(@PathVariable String username, String oldPassword, String newPassword) throws Exception {
+		ResultVo<Boolean> resultVo = new ResultVo<>();
+		resultVo.setCode(WebCodeEnum.SUCCESS.getValue());
 		userService.changePassword(username, oldPassword, newPassword);
+		return resultVo;
 	}
 
 	@GetMapping

@@ -26,7 +26,7 @@ public class SysLogServiceImpl implements SysLogService {
 	@Override
 	public void save(SysLogs sysLogs) {
 
-		if (sysLogs == null || sysLogs.getUser() == null || sysLogs.getUser().getId() == null) {
+		if (sysLogs == null || sysLogs.getUserId() == null) {
 			return;
 		}
 		sysLogsRepository.save(sysLogs);
@@ -42,7 +42,7 @@ public class SysLogServiceImpl implements SysLogService {
 
 		SysUser user = new SysUser();
 		user.setId(userId);
-		sysLogs.setUser(user);
+		sysLogs.setUserId(user.getId().intValue());
 
 		sysLogsRepository.save(sysLogs);
 

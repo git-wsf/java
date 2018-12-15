@@ -34,7 +34,7 @@ public class ExceptionAdvisor {
             }
             resultVo.setMsg(String.join(",",errorMessage));
         } else {
-            resultVo.setMsg("Exception: " + error.getMessage());
+            resultVo.setMsg(error.getMessage());
         }
 
         return resultVo;
@@ -48,7 +48,7 @@ public class ExceptionAdvisor {
         LOGGER.error(error.getMessage(), error);
 
         resultVo.setCode(WebCodeEnum.ERROR.getValue());
-        resultVo.setMsg("RuntimeException: " + error.getMessage());
+        resultVo.setMsg(error.getMessage());
 
         return resultVo;
     }

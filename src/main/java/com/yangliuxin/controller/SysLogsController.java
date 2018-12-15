@@ -29,19 +29,25 @@ public class SysLogsController {
 	@PreAuthorize("hasAuthority('sys:log:query')")
 	@ApiOperation(value = "日志列表")
 	public PageTableResponse list(PageTableRequest request) {
-		return new PageTableHandler(new CountHandler() {
+
+		CountHandler countHandler = new CountHandler() {
 
 			@Override
 			public int count(PageTableRequest request) {
 				return sysLogsRepository.count(request.getParams());
 			}
-		}, new ListHandler() {
+		};
+		ListHandler listHandler = new ListHandler() {
 
 			@Override
 			public List<SysLogs> list(PageTableRequest request) {
 				return sysLogsRepository.list(request.getParams(), request.getOffset(), request.getLimit());
 			}
-		}).handle(request);
+		};
+		PageTableHandler pageTableHandler = new PageTableHandler(countHandler, listHandler);
+
+		PageTableResponse pageTableResponse =  pageTableHandler.handle(request);
+		return pageTableResponse;
 	}
 
 }

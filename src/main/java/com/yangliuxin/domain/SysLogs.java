@@ -1,11 +1,13 @@
 package com.yangliuxin.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -15,8 +17,8 @@ public class SysLogs extends BaseEntity<Long> {
 
 	private static final long serialVersionUID = -7809315432127036583L;
 
-	@Column(name = "user")
-	private SysUser user;
+	@Column(name = "userId")
+	private Integer userId;
 
 	@Column(name = "module")
 	private String module;
@@ -26,6 +28,10 @@ public class SysLogs extends BaseEntity<Long> {
 
 	@Column(name = "remark")
 	private String remark;
+
+	@Transient
+	//@JsonProperty(value = "user")
+	private SysUser user;
 
 
 }

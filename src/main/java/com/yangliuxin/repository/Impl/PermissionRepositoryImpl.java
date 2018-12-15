@@ -2,66 +2,87 @@ package com.yangliuxin.repository.Impl;
 
 import com.yangliuxin.domain.Permission;
 import com.yangliuxin.repository.PermissionRepository;
+import com.yangliuxin.repository.dao.PermissionDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Set;
 
 
 @Repository
 public class PermissionRepositoryImpl implements PermissionRepository {
+
+
+
+    @Autowired
+    private PermissionDao permissionDao;
+
+
+    @Autowired
+    private EntityManager entityManager;
+
+
+
     @Override
     public List<Permission> listAll() {
-        return null;
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC,"sort"));
+        return permissionDao.findAll(sort);
     }
 
     @Override
     public List<Permission> listParents() {
-        return null;
+        return permissionDao.findAllByTypeOrderBySortAsc(1);
     }
 
     @Override
     public List<Permission> listByUserId(Long userId) {
-        return null;
+        return permissionDao.listByUserId(userId);
     }
 
     @Override
     public List<Permission> listByRoleId(Long roleId) {
-        return null;
+        return permissionDao.listByRoleId(roleId);
     }
 
     @Override
     public Permission getById(Long id) {
-        return null;
+        return permissionDao.getOne(id);
     }
 
     @Override
     public int save(Permission permission) {
-        return 0;
+        permissionDao.save(permission);
+        return 1;
     }
 
     @Override
     public int update(Permission permission) {
-        return 0;
+        permissionDao.save(permission);
+        return 1;
     }
 
     @Override
     public int delete(Long id) {
-        return 0;
+        permissionDao.delete(id);
+        return 1;
     }
 
     @Override
     public int deleteByParentId(Long id) {
-        return 0;
+        permissionDao.deleteByParentId(id);
+        return 1;
     }
 
     @Override
     public int deleteRolePermission(Long permissionId) {
-        return 0;
+        return permissionDao.deleteRolePermission(permissionId);
     }
 
     @Override
     public Set<Long> listUserIds(Long permissionId) {
-        return null;
+        return permissionDao.listUserIds(permissionId);
     }
 }

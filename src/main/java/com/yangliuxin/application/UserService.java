@@ -11,6 +11,6 @@ public interface UserService {
 
 	SysUser getUser(String username);
 
-	void changePassword(String username, String oldPassword, String newPassword);
+	void changePassword(String username, String oldPassword, String newPassword) throws Exception ;
 
 }

@@ -46,8 +46,8 @@ public class SysUser extends BaseEntity<Long> {
 	@Column(name = "status")
 	private Integer status;
 
-	@Column(name = "intro")
-	private String intro;
+	//@Column(name = "intro")
+	//private String intro;
 
 
 }

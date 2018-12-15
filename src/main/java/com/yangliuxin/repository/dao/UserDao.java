@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface UserDao extends JpaRepository<SysUser, Long> , JpaSpecificationExecutor<SysUser>  {
 
-    SysUser getSysUserByUsername(String userName);
+    SysUser findByUsername(String userName);
 
 }

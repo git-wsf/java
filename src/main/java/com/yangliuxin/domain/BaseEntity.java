@@ -8,9 +8,7 @@ import java.util.Date;
 
 @Data
 @MappedSuperclass
-abstract class BaseEntity<ID extends Serializable> implements Serializable {
-
-	private static final long serialVersionUID = 2054813493011812469L;
+public abstract class BaseEntity<ID extends Serializable> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

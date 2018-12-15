@@ -22,29 +22,30 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private PermissionRepository permissionRepository;
+    @Autowired
+    private UserService userService;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		SysUser sysUser = userService.getUser(username);
-		if (sysUser == null) {
-			throw new AuthenticationCredentialsNotFoundException("用户名不存在");
-		} else if (sysUser.getStatus() == UserStatusEnum.LOCKED.getValue()) {
-			throw new LockedException("用户被锁定,请联系管理员");
-		} else if (sysUser.getStatus() == UserStatusEnum.DISABLED.getValue()) {
-			throw new DisabledException("用户已作废");
-		}
+    @Autowired
+    private PermissionRepository permissionRepository;
 
-		LoginUser loginUser = new LoginUser();
-		BeanUtils.copyProperties(sysUser, loginUser);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        SysUser sysUser = userService.getUser(username);
+        if (sysUser == null) {
+            throw new AuthenticationCredentialsNotFoundException("用户名不存在");
+        } else if (sysUser.getStatus().equals(UserStatusEnum.LOCKED.getValue())) {
+            throw new LockedException("用户被锁定,请联系管理员");
+        } else if (sysUser.getStatus().equals(UserStatusEnum.DISABLED.getValue())) {
+            throw new DisabledException("用户已作废");
+        }
 
-		List<Permission> permissions = permissionRepository.listByUserId(sysUser.getId());
-		loginUser.setPermissions(permissions);
+        LoginUser loginUser = new LoginUser();
+        BeanUtils.copyProperties(sysUser, loginUser);
 
-		return loginUser;
-	}
+        List<Permission> permissions = permissionRepository.listByUserId(sysUser.getId());
+        loginUser.setPermissions(permissions);
+
+        return loginUser;
+    }
 
 }

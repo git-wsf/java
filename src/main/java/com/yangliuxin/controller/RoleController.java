@@ -34,7 +34,7 @@ public class RoleController {
 	@PostMapping
 	@ApiOperation(value = "保存角色")
 	@PreAuthorize("hasAuthority('sys:role:add')")
-	public void saveRole(@RequestBody RoleDto roleDto) {
+	public void saveRole(@RequestBody RoleDto roleDto)  throws Exception{
 		roleService.saveRole(roleDto);
 	}
 
@@ -69,7 +69,7 @@ public class RoleController {
 	@ApiOperation(value = "所有角色")
 	@PreAuthorize("hasAnyAuthority('sys:user:query','sys:role:query')")
 	public List<Role> roles() {
-		return roleRepository.list(Maps.newHashMap(), null, null);
+		return roleRepository.list(Maps.newHashMap(), 0, 0);
 	}
 
 	@GetMapping(params = "userId")

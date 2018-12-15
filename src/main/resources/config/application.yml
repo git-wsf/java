@@ -26,6 +26,7 @@ spring:
       ddl-auto: none
       show-sql: true
       format-sql: true
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     joda-date-time-format: yyyy-MM-dd HH:mm:ss
@@ -47,9 +48,12 @@ spring:
         max-idle: 8
         max-active: 8
         max-wait: -1ms
-
+  http:
+    multipart:
+      max-request-size: 20MB
+      max-file-size: 20MB
 files:
-  path: ${file-path:d:/files}
+  path: /weblog/logs/images
 token:
   expire:
     seconds: 8640000

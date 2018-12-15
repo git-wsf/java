@@ -121,9 +121,9 @@ public class TemplateUtil {
 		text = text.replace("{beanParamName}", lowerFirstChar(beanName));
 
 		String insertColumns = getInsertColumns(input.getColumnNames());
-		text = text.replace("{insert_columns}", insertColumns);
+		text = text.replace("{insertb_columns}", insertColumns);
 		String insertValues = getInsertValues(input.getColumnNames(), input.getBeanFieldName());
-		text = text.replace("{insert_values}", insertValues);
+		text = text.replace("{insertb_values}", insertValues);
 		FileUtil.saveTextFile(text, path + File.separator + getPackagePath(daoPackageName) + daoName + ".java");
 		log.debug("生成java dao：{}模板", beanName);
 

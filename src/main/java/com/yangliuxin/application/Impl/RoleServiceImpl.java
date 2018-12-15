@@ -23,8 +23,8 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
-	public void saveRole(RoleDto roleDto) {
-		Role role = roleDto;
+	public void saveRole(RoleDto roleDto) throws Exception {
+		Role role = new Role(roleDto);
 		List<Long> permissionIds = roleDto.getPermissionIds();
 		permissionIds.remove(0L);
 
@@ -48,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
 		log.debug("新增角色{}", role.getName());
 	}
 
-	private void updateRole(Role role, List<Long> permissionIds) {
+	private void updateRole(Role role, List<Long> permissionIds) throws Exception{
 		Role r = roleRepository.getRole(role.getName());
 		if (r != null && r.getId() != role.getId()) {
 			throw new IllegalArgumentException(role.getName() + "已存在");

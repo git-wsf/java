@@ -5,8 +5,8 @@ CREATE TABLE `file_info` (
   `path` varchar(255) NOT NULL,
   `url` varchar(1024) NOT NULL,
   `type` int(1) NOT NULL,
-  `createTime` datetime NOT NULL,
-  `updateTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -17,7 +17,8 @@ CREATE TABLE `sys_logs` (
   `module` varchar(50) DEFAULT NULL,
   `flag` tinyint(4) NOT NULL DEFAULT '1',
   `remark` text,
-  `createTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   KEY `createTime` (`createTime`)
@@ -32,6 +33,8 @@ CREATE TABLE `sys_permission` (
   `type` tinyint(1) NOT NULL,
   `permission` varchar(50) DEFAULT NULL,
   `sort` int(11) NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -68,8 +71,8 @@ CREATE TABLE `sys_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `description` varchar(100) DEFAULT NULL,
-  `createTime` datetime NOT NULL,
-  `updateTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -110,8 +113,8 @@ CREATE TABLE `sys_user` (
   `birthday` date DEFAULT NULL,
   `sex` tinyint(1) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
-  `createTime` datetime NOT NULL,
-  `updateTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -125,8 +128,8 @@ CREATE TABLE `tb_dict` (
   `type` varchar(16) NOT NULL,
   `k` varchar(16) NOT NULL,
   `val` varchar(64) NOT NULL,
-  `createTime` datetime NOT NULL,
-  `updateTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `type` (`type`,`k`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -148,15 +151,16 @@ CREATE TABLE `tb_notice` (
   `title` varchar(128) NOT NULL,
   `content` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
-  `createTime` datetime NOT NULL,
-  `updateTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `tb_notice_read` (
   `noticeId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `createTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`noticeId`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -165,7 +169,7 @@ CREATE TABLE `tb_token` (
   `id` varchar(36) NOT NULL,
   `val` text NOT NULL,
   `expireTime` datetime NOT NULL,
-  `createTime` datetime NOT NULL,
-  `updateTime` datetime NOT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
