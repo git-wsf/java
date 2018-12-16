@@ -38,10 +38,13 @@ spring:
       load-on-startup: 1
     favicon:
       enabled: false
+    view:
+      prefix: /
+      suffix: .html
   redis:
     host: localhost
     port: 6379
-    timeout: 20
+    timeout: 2000
     lettuce:
       pool:
         min-idle: 0
@@ -93,3 +96,16 @@ flyway:
   baseline-on-migrate: true
   encoding: UTF-8
   locations: classpath:db/migration
+
+weChat:
+  appId: wx3d5abb2cb396a10f
+  secret: c97349cba93ee239af1b3e586b493111
+  token: weChatToken
+  expire: 7200
+  siteUrl: http://f71f343e.ngrok.io/
+  gift:
+    giftList:
+    - {id: 1,name: 50元话费券, probability: 0.001, perDay: 1, total: 50}
+    - {id: 2,name: 爱奇艺VIP充值卡, probability: 0.01, perDay: 2, total: 100}
+    - {id: 3,name: 5元话费券, probability: 0.05, perDay: 6, total: 300}
+    - {id: 4,name: V钻, probability: 0.1, perDay: 32, total: 1630}

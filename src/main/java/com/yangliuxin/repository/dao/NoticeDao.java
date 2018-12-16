@@ -2,7 +2,6 @@ package com.yangliuxin.repository.dao;
 
 import com.yangliuxin.domain.Notice;
 import com.yangliuxin.domain.SysUser;
-import com.yangliuxin.vo.NoticeReadVO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

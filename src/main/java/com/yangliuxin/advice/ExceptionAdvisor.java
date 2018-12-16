@@ -1,9 +1,12 @@
 package com.yangliuxin.advice;
 
+import com.yangliuxin.exceptions.WeChatAuthorizeException;
+import com.yangliuxin.property.WeChatAccountProperty;
 import com.yangliuxin.vo.ResultVo;
 import com.yangliuxin.enums.WebCodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,10 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionAdvisor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAdvisor.class);
+
+
+    @Autowired
+    private WeChatAccountProperty  weChatAccountProperty;
 
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
@@ -51,5 +59,15 @@ public class ExceptionAdvisor {
         resultVo.setMsg(error.getMessage());
 
         return resultVo;
+    }
+
+    @ExceptionHandler(WeChatAuthorizeException.class)
+    public ModelAndView handlerAuthorizeException(WeChatAuthorizeException e){
+        return new ModelAndView("redirect:"
+                .concat(weChatAccountProperty.getSiteUrl())
+                .concat("/wechat/authorize")
+                .concat("?returnUrl=")
+                .concat(weChatAccountProperty.getSiteUrl())
+                .concat(e.getMessage()));
     }
 }

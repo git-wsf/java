@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.yangliuxin.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.yangliuxin.controller.wechat"))
                 .paths(PathSelectors.any())
                 .build();
     }

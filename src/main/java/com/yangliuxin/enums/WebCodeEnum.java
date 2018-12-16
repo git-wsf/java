@@ -18,7 +18,9 @@ public enum WebCodeEnum {
     USER_REGISTERED(48006),
     LOGIN_MSG_CODE_ERROR(48007),
     SEND_MSG_CODE_OVER_NUMBER(9999),
+    WECHAT_MP_ERROR(40001),
     USER_IN_BLACKLIST(50002);
+
     private int value;
     private String msg;
 
