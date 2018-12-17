@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface ShopDao  extends JpaRepository<Shop, Long>, JpaSpecificationExecutor<Shop> {
 
+    Shop findFirstByShopIdAndDdd(String shopId, String ddd);
 
-    Shop findByShopIdAndDdd(Integer shopId, String ddd);
+    Shop findByShopIdAndDdd(String shopId, String ddd);
 
     List<Shop> findTop10ByDddOrderByDayCountryCountAsc(String ddd);
 

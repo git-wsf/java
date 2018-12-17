@@ -19,13 +19,13 @@ import javax.persistence.Table;
 public class Shop  extends BaseEntity<Long> {
 
     @Column(name = "shopId")
-    private Integer shopId;
+    private String shopId;
 
     @Column(name = "shopName")
     private String shopName;
 
     @Column(name = "level")
-    private Integer level;
+    private String level;
 
     @Column(name = "address")
     private String address;
@@ -61,7 +61,7 @@ public class Shop  extends BaseEntity<Long> {
     private Integer springProvinceCount;
 
     @Column(name = "springLevelCount")
-    private String springLevelCount;
+    private Integer springLevelCount;
 
     @Column(name = "percent")
     private String percent;

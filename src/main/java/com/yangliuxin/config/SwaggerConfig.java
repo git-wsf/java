@@ -26,8 +26,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("api文档")
-                .description("restfun 风格接口")
+                .title("oppo活动接口文档")
+                .description("有问题请联系风清扬")
                 .version("1.0")
                 .build();
     }

@@ -29,8 +29,8 @@ public class ShopRepositoryImpl implements ShopRepository {
     }
 
     @Override
-    public Shop getShopData(Integer shopId, String ddd) {
-        return shopDao.findByShopIdAndDdd(shopId, ddd);
+    public Shop getShopData(String shopId, String ddd) {
+        return shopDao.findFirstByShopIdAndDdd(shopId, ddd);
     }
 
     @Override

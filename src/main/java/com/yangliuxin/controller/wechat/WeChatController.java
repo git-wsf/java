@@ -8,6 +8,7 @@ import com.yangliuxin.domain.Lottery;
 import com.yangliuxin.domain.Reserve;
 import com.yangliuxin.domain.Shop;
 import com.yangliuxin.domain.Users;
+import com.yangliuxin.enums.TopShopDataEnum;
 import com.yangliuxin.exceptions.WeChatAuthorizeException;
 import com.yangliuxin.property.GiftProperty;
 import com.yangliuxin.property.WeChatAccountProperty;
@@ -45,13 +46,15 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
 @Controller
 @RequestMapping("/wechat")
 @Slf4j
-@Api(tags = "微信相关接口")
+@Api(tags = "OPPP活动接口", description = "微信先关接口API")
 public class WeChatController {
 
     @Autowired
@@ -70,24 +73,17 @@ public class WeChatController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    /**
-     * 访问这个时便会发起微信的网页授权
-     *
-     * @param returnUrl 发起授权是可携带的一个参数，我这里用的是下面将要用到的login()的地址，将获取到的openid传递过去
-     * @return
-     */
     @ApiOperation(value = "授权跳转，禁止调用")
     @GetMapping("/authorize")
     public String authorize(@RequestParam("returnUrl") String returnUrl) {
-        String url = weChatAccountProperty.getSiteUrl()+"wechat/userInfo";
+        String url = weChatAccountProperty.getSiteUrl()+"wechat/callBack";
         String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAUTH2_SCOPE_BASE, URLEncoder.encode(returnUrl));
         return "redirect:" + redirectUrl;
     }
 
-    //微信回调时访问的地址  这里获得code和之前所设置的returnUrl
     @ApiOperation(value = "授权回调，禁止调用")
-    @GetMapping("/userInfo")
-    public String userInfo(HttpServletRequest request,  HttpServletResponse response,@RequestParam("code") String code, @RequestParam("state") String returnUrl) throws Exception {
+    @GetMapping("/callBack")
+    public String callBack(HttpServletRequest request,  HttpServletResponse response,@RequestParam("code") String code, @RequestParam("state") String returnUrl) throws Exception {
         //token redis
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken ;
         wxMpOAuth2AccessToken = (WxMpOAuth2AccessToken)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN");
@@ -132,7 +128,7 @@ public class WeChatController {
     }
 
     @GetMapping("index")
-    @ApiOperation(value = "活动主页，禁止调用")
+    @ApiOperation(value = "活动入口")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws WeChatAuthorizeException, IOException {
         Cookie cookie = CookieUtil.get(request,weChatAccountProperty.getToken());
         if(null == cookie){
@@ -197,8 +193,8 @@ public class WeChatController {
             return resultVo;
         }
         Gift currentGift = getCurrentGiftById(originalIndex);
-        Long giftDayCount = redisTemplate.opsForValue().increment("GIFT_DAY"+originalIndex+new Date("yyyy-MM-dd").toString(), 1L);
-        Long giftTotalCount = redisTemplate.opsForValue().increment("GIFT_TOTAL"+originalIndex+new Date("yyyy-MM-dd").toString(), 1L);
+        Long giftDayCount = redisTemplate.opsForValue().increment("GIFT_DAY"+originalIndex+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 1L);
+        Long giftTotalCount = redisTemplate.opsForValue().increment("GIFT_TOTAL"+originalIndex+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 1L);
         if(giftDayCount >= currentGift.getPerDay()){
             resultVo.setCode(0);
             resultVo.setMsg("未中奖");
@@ -232,10 +228,10 @@ public class WeChatController {
     }
 
 
-    @GetMapping("user")
+    @GetMapping("userInfo")
     @ResponseJSONP
     @ApiOperation(value = "获取当前用户信息")
-    public ResultVo<Users> user(HttpServletRequest request, HttpServletResponse response) throws WeChatAuthorizeException,Exception{
+    public ResultVo<Users> userInfo(HttpServletRequest request, HttpServletResponse response) throws WeChatAuthorizeException,Exception{
         ResultVo<Users> resultVo = new ResultVo<>();
         Cookie cookie = CookieUtil.get(request,weChatAccountProperty.getToken());
         if(null == cookie){
@@ -340,9 +336,9 @@ public class WeChatController {
     @GetMapping("getShopData")
     @ResponseJSONP
     @ApiOperation(value = "根据店铺号码获取店铺当天数据信息")
-    public ResultVo<Shop> getShopData(@RequestParam("shopId") @NotNull @Valid Integer shopId){
+    public ResultVo<Shop> getShopData(@RequestParam("shopId") @NotNull @Valid String shopId){
         ResultVo<Shop> resultVo = new ResultVo<>();
-        String today = new Date("yyyyMMdd").toString();
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         Shop shop = shopRepository.getShopData(shopId, today);
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
@@ -353,10 +349,10 @@ public class WeChatController {
     @GetMapping("getTopShopData")
     @ResponseJSONP
     @ApiOperation(value = "获取当天各排名数据")
-    public ResultVo<List<Shop>> getTopShopData(@RequestParam("shopId") @NotNull @Valid @Min(1) @Max(8) Integer brand){
+    public ResultVo<List<Shop>> getTopShopData(@RequestParam("brand") @NotNull @Valid TopShopDataEnum brand){
         ResultVo<List<Shop>> resultVo = new ResultVo<>();
-        String today = new Date("yyyyMMdd").toString();
-        List<Shop> list = shopRepository.getTopShopData(brand, today);
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        List<Shop> list = shopRepository.getTopShopData(brand.getCode(), today);
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(list);

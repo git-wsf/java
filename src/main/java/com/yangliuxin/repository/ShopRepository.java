@@ -9,7 +9,7 @@ public interface ShopRepository {
 
     Shop save(Shop shop);
 
-    Shop getShopData(Integer shopId, String ddd);
+    Shop getShopData(String shopId, String ddd);
 
     List<Shop> getTopShopData(Integer brand, String ddd);
 

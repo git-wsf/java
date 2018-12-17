@@ -6,7 +6,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/DB_YANGLIUXIN?useUnicode=true&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
-    password: cae981b191
+    password: yangliuxin
     initialSize: 1
     minIdle: 10
     maxActive: 10
