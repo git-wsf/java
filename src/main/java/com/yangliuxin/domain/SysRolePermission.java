@@ -1,7 +1,6 @@
 package com.yangliuxin.domain;
 
 
-import com.sun.xml.internal.ws.developer.Serialization;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +10,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "sys_role_permission")
 @Data
-@Serialization
 @EqualsAndHashCode
 @IdClass(SysRolePermissionPK.class)
 public class SysRolePermission implements Serializable {

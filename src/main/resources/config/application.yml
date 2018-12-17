@@ -6,7 +6,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/DB_YANGLIUXIN?useUnicode=true&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
-    password: yangliuxin
+    password: JUXINTaifu2015
     initialSize: 1
     minIdle: 10
     maxActive: 10
@@ -101,8 +101,8 @@ weChat:
   appId: wx3d5abb2cb396a10f
   secret: c97349cba93ee239af1b3e586b493111
   token: weChatToken
-  expire: 7200
-  siteUrl: http://f71f343e.ngrok.io/
+  expire: 72000
+  siteUrl: http://oppo.cooddo.com/
   gift:
     giftList:
     - {id: 1,name: 50元话费券, probability: 0.001, perDay: 1, total: 50}

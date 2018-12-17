@@ -1,4 +1,4 @@
-package com.test.demo.helper;
+package com.yangliuxin.helper;
 
 import junit.framework.TestCase;
 
