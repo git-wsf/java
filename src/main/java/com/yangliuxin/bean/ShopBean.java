@@ -27,6 +27,10 @@ public class ShopBean {
     private String address;
 
     @NotNull
+    @ApiModelProperty("门店所在省份")
+    private String province;
+
+    @NotNull
     @ApiModelProperty("日得分")
     private Integer day;
 
@@ -50,9 +54,6 @@ public class ShopBean {
     @ApiModelProperty("双周得分省排名")
     private Integer weekProvinceCount;
 
-    @NotNull
-    @ApiModelProperty("双周得分级别排名")
-    private Integer weekLevelCount;
 
     @NotNull
     @ApiModelProperty("元春得分")
@@ -66,9 +67,6 @@ public class ShopBean {
     @ApiModelProperty("元春得分省排名")
     private Integer springProvinceCount;
 
-    @NotNull
-    @ApiModelProperty("元春得分所在级别排名")
-    private Integer springLevelCount;
 
     @NotNull
     @ApiModelProperty("击败其他分店百分比")

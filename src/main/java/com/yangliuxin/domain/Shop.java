@@ -31,6 +31,9 @@ public class Shop  extends BaseEntity<Long> {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "province")
+    private String province;
+
     @Column(name = "day")
     private Integer day;
 
@@ -49,9 +52,6 @@ public class Shop  extends BaseEntity<Long> {
     @Column(name = "weekProvinceCount")
     private Integer weekProvinceCount;
 
-    @Column(name = "weekLevelCount")
-    private Integer weekLevelCount;
-
     @Column(name = "spring")
     private Integer spring;
 
@@ -60,9 +60,6 @@ public class Shop  extends BaseEntity<Long> {
 
     @Column(name = "springProvinceCount")
     private Integer springProvinceCount;
-
-    @Column(name = "springLevelCount")
-    private Integer springLevelCount;
 
     @Column(name = "percent")
     private String percent;
@@ -75,6 +72,7 @@ public class Shop  extends BaseEntity<Long> {
         shopName = shopBean.getShopName();
         level = shopBean.getLevel();
         address = shopBean.getAddress();
+        province = shopBean.getProvince();
         day = shopBean.getDay();
         week = shopBean.getWeek();
         spring = shopBean.getSpring();
@@ -82,10 +80,8 @@ public class Shop  extends BaseEntity<Long> {
         dayProvinceCount = shopBean.getDayProvinceCount();
         weekCountryCount = shopBean.getWeekCountryCount();
         weekProvinceCount = shopBean.getWeekProvinceCount();
-        weekLevelCount = shopBean.getWeekLevelCount();
         springCountryCount = shopBean.getSpringCountryCount();
         springProvinceCount = shopBean.getSpringProvinceCount();
-        springLevelCount = shopBean.getSpringLevelCount();
         percent = shopBean.getPercent();
         ddd = shopBean.getDdd();
 
