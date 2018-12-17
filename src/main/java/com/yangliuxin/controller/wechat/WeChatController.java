@@ -4,6 +4,7 @@ import com.alibaba.fastjson.support.spring.annotation.ResponseJSONP;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yangliuxin.bean.LotteryBean;
 import com.yangliuxin.bean.ReserveBean;
+import com.yangliuxin.bean.ShopBean;
 import com.yangliuxin.domain.Lottery;
 import com.yangliuxin.domain.Reserve;
 import com.yangliuxin.domain.Shop;
@@ -356,6 +357,27 @@ public class WeChatController {
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(list);
+        return resultVo;
+    }
+
+    @PostMapping("importData")
+    @ResponseJSONP
+    @ApiOperation(value = "店面数据导入接口")
+    public ResultVo<Shop> importData(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid ShopBean shopBean) throws Exception{
+        ResultVo<Shop> resultVo = new ResultVo<>();
+        //Shop shop = new Shop(shopBean);
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        Shop shop = shopRepository.getShopData(shopBean.getShopId(), today);
+        if(shop != null){
+            resultVo.setCode(0);
+            resultVo.setMsg("重复数据");
+            return resultVo;
+        }
+        shop = new Shop(shopBean);
+        shop = shopRepository.save(shop);
+        resultVo.setCode(1);
+        resultVo.setMsg("导入成功");
+        resultVo.setData(shop);
         return resultVo;
     }
 }

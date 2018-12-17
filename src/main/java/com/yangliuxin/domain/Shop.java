@@ -1,6 +1,7 @@
 package com.yangliuxin.domain;
 
 
+import com.yangliuxin.bean.ShopBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -49,7 +50,7 @@ public class Shop  extends BaseEntity<Long> {
     private Integer weekProvinceCount;
 
     @Column(name = "weekLevelCount")
-    private String weekLevelCount;
+    private Integer weekLevelCount;
 
     @Column(name = "spring")
     private Integer spring;
@@ -68,5 +69,26 @@ public class Shop  extends BaseEntity<Long> {
 
     @Column(name = "ddd")
     private String ddd;
+
+    public Shop(ShopBean shopBean){
+        shopId = shopBean.getShopId();
+        shopName = shopBean.getShopName();
+        level = shopBean.getLevel();
+        address = shopBean.getAddress();
+        day = shopBean.getDay();
+        week = shopBean.getWeek();
+        spring = shopBean.getSpring();
+        dayCountryCount = shopBean.getDayCountryCount();
+        dayProvinceCount = shopBean.getDayProvinceCount();
+        weekCountryCount = shopBean.getWeekCountryCount();
+        weekProvinceCount = shopBean.getWeekProvinceCount();
+        weekLevelCount = shopBean.getWeekLevelCount();
+        springCountryCount = shopBean.getSpringCountryCount();
+        springProvinceCount = shopBean.getSpringProvinceCount();
+        springLevelCount = shopBean.getSpringLevelCount();
+        percent = shopBean.getPercent();
+        ddd = shopBean.getDdd();
+
+    }
 
 }

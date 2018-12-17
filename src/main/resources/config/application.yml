@@ -24,9 +24,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-      show-sql: true
-      format-sql: true
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      format-sql: true
+    show-sql: true
+
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     joda-date-time-format: yyyy-MM-dd HH:mm:ss
