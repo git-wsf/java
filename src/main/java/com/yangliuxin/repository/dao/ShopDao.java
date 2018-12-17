@@ -10,8 +10,6 @@ public interface ShopDao  extends JpaRepository<Shop, Long>, JpaSpecificationExe
 
     Shop findFirstByShopIdAndDdd(String shopId, String ddd);
 
-    Shop findByShopIdAndDdd(String shopId, String ddd);
-
     List<Shop> findTop10ByDddOrderByDayCountryCountAsc(String ddd);
 
     List<Shop> findTop10ByDddOrderByDayProvinceCountAsc(String ddd);
@@ -20,12 +18,9 @@ public interface ShopDao  extends JpaRepository<Shop, Long>, JpaSpecificationExe
 
     List<Shop> findTop10ByDddOrderByWeekProvinceCountAsc(String ddd);
 
-    List<Shop> findTop10ByDddOrderByWeekLevelCountAsc(String ddd);
-
     List<Shop> findTop10ByDddOrderBySpringCountryCountAsc(String ddd);
 
     List<Shop> findTop10ByDddOrderBySpringProvinceCountAsc(String ddd);
 
-    List<Shop> findTop10ByDddOrderBySpringLevelCountAsc(String ddd);
 
 }

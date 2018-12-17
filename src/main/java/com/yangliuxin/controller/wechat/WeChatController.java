@@ -41,8 +41,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -55,6 +53,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/wechat")
 @Slf4j
+@CrossOrigin
 @Api(tags = "OPPP活动接口", description = "微信先关接口API")
 public class WeChatController {
 

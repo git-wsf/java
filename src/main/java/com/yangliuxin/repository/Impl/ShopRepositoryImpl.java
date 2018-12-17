@@ -48,17 +48,12 @@ public class ShopRepositoryImpl implements ShopRepository {
         else if(brand == 4){
             list = shopDao.findTop10ByDddOrderByWeekProvinceCountAsc(ddd);
         }
-        else if(brand == 5){
-            list = shopDao.findTop10ByDddOrderByWeekLevelCountAsc(ddd);
-        }
+
         else if(brand == 6){
             list = shopDao.findTop10ByDddOrderBySpringCountryCountAsc(ddd);
         }
         else if(brand == 7){
             list = shopDao.findTop10ByDddOrderBySpringProvinceCountAsc(ddd);
-        }
-        else if(brand == 8){
-            list = shopDao.findTop10ByDddOrderBySpringLevelCountAsc(ddd);
         }
         return list;
     }

@@ -26,7 +26,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("oppo活动接口文档")
+                .title("VIVO活动接口文档")
                 .description("有问题请联系风清扬")
                 .version("1.0")
                 .build();
