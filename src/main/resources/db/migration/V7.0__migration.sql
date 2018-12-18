@@ -1,1 +1,1 @@
-alter table tb_reverse add column shopId varchar(30) default null after id;
+alter table tb_reserve add column shopId varchar(30) default null after id;
