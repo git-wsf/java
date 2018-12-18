@@ -395,6 +395,7 @@ public class WeChatController {
             log.info("IMPORT_DATA_RAW:"+shopBean);
             log.info("IMPORT_DATA_SN:"+sign);
             log.info("IMPORT_DATA_RIGHT_SN:"+SignUtil.getSign(params,propertyConfiguration.getToken().getJwtSecret()));
+            log.info("over one two three four");
             throw new Exception("签名失败");
         }
 
