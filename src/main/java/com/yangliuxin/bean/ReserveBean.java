@@ -1,6 +1,7 @@
 package com.yangliuxin.bean;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -10,11 +11,22 @@ import javax.validation.constraints.NotNull;
 public class ReserveBean {
 
     @NotNull
+    @ApiParam("门店编号")
+    private String shopId;
+
+    @NotNull
+    @ApiParam("门店名称")
     private String shop;
+
     @NotNull
+    @ApiParam("预约产品名称")
     private String product;
+
     @NotNull
+    @ApiParam("预约人名称")
     private String name;
+
     @NotNull
-    private String address;
+    @ApiParam("预约人手机号")
+    private String mobile;
 }

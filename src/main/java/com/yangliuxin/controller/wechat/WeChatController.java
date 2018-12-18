@@ -318,7 +318,8 @@ public class WeChatController {
         }
 
         Reserve reserve = new Reserve();
-        reserve.setAddress(reserveBean.getAddress());
+        reserve.setShopId(reserveBean.getShopId());
+        reserve.setMobile(reserveBean.getMobile());
         reserve.setProduct(reserveBean.getProduct());
         reserve.setShop(reserveBean.getShop());
         reserve.setName(reserveBean.getName());

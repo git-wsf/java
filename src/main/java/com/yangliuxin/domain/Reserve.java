@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reserve  extends BaseEntity<Long>{
+
+    @Column(name = "shopId")
+    private String shopId;
+
     @Column(name = "shop")
     private String shop;
 
@@ -25,6 +29,6 @@ public class Reserve  extends BaseEntity<Long>{
     private String name;
 
     @Column(name = "mobile")
-    private String address;
+    private String mobile;
 
 }

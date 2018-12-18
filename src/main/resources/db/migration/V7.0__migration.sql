@@ -1,0 +1,1 @@
+alter table tb_reverse add column shopId varchar(30) default null after id;
