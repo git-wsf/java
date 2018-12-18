@@ -61,7 +61,7 @@ files:
 token:
   expire:
     seconds: 8640000
-  jwtSecret: JellyFish_%^*@#!_2018_&*7876
+  jwtSecret: VIVO_WEDGE2_CN_%^*@#!_2018_&*7876
 
 validate:
   product: Dysmsapi

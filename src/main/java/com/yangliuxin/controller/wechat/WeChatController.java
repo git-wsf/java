@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yangliuxin.bean.LotteryBean;
 import com.yangliuxin.bean.ReserveBean;
 import com.yangliuxin.bean.ShopBean;
+import com.yangliuxin.config.PropertyConfiguration;
 import com.yangliuxin.domain.Lottery;
 import com.yangliuxin.domain.Reserve;
 import com.yangliuxin.domain.Shop;
@@ -19,9 +20,11 @@ import com.yangliuxin.repository.ShopRepository;
 import com.yangliuxin.repository.UsersRepository;
 import com.yangliuxin.utils.CookieUtil;
 import com.yangliuxin.utils.LotteryUtil;
+import com.yangliuxin.utils.SignUtil;
 import com.yangliuxin.vo.Gift;
 import com.yangliuxin.vo.ResultVo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -30,6 +33,7 @@ import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -49,6 +53,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Controller
 @RequestMapping("/wechat")
@@ -350,7 +356,7 @@ public class WeChatController {
     @GetMapping("getTopShopData")
     @ResponseJSONP
     @ApiOperation(value = "获取当天各排名数据")
-    public ResultVo<List<Shop>> getTopShopData(@RequestParam("brand") @NotNull @Valid TopShopDataEnum brand){
+    public ResultVo<List<Shop>> getTopShopData(@RequestParam("brand") @NotNull @NotBlank @Valid TopShopDataEnum brand){
         ResultVo<List<Shop>> resultVo = new ResultVo<>();
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         List<Shop> list = shopRepository.getTopShopData(brand.getCode(), today);
@@ -359,11 +365,36 @@ public class WeChatController {
         resultVo.setData(list);
         return resultVo;
     }
+    @Autowired
+    private PropertyConfiguration propertyConfiguration;
 
     @PostMapping("importData")
     @ResponseJSONP
+    @ApiImplicitParam(paramType="header", name = "sign", value = "签名", required = true, dataType = "String")
     @ApiOperation(value = "店面数据导入接口")
-    public ResultVo<Shop> importData(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid ShopBean shopBean) throws Exception{
+    public ResultVo<Shop> importData(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid ShopBean shopBean, @RequestHeader @Valid @NotNull @NotBlank String sign) throws Exception{
+        SortedMap<String, String> params = new TreeMap<>();
+        params.put("shopId",shopBean.getShopId());
+        params.put("shopName",shopBean.getShopName());
+        params.put("level",shopBean.getLevel());
+        params.put("address",shopBean.getAddress());
+        params.put("province",shopBean.getProvince());
+        params.put("day",shopBean.getDay().toString());
+        params.put("dayCountryCount",shopBean.getDayCountryCount().toString());
+        params.put("dayProvinceCount",shopBean.getDayProvinceCount().toString());
+        params.put("week",shopBean.getDayProvinceCount().toString());
+        params.put("weekCountryCount",shopBean.getWeekCountryCount().toString());
+        params.put("weekProvinceCount",shopBean.getWeekProvinceCount().toString());
+        params.put("spring",shopBean.getSpring().toString());
+        params.put("springCountryCount",shopBean.getSpringCountryCount().toString());
+        params.put("springProvinceCount",shopBean.getWeekProvinceCount().toString());
+        params.put("percent",shopBean.getSpring().toString());
+        params.put("ddd",shopBean.getDdd());
+
+        if(!sign.equals(SignUtil.getSign(params,propertyConfiguration.getToken().getJwtSecret()))){
+            throw new Exception("签名失败");
+        }
+
         ResultVo<Shop> resultVo = new ResultVo<>();
         //Shop shop = new Shop(shopBean);
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
