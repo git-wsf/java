@@ -74,7 +74,7 @@ public class WeChatController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @ApiOperation(value = "授权跳转，禁止调用")
+    @ApiOperation(value = "微信授权跳转，AJAX授权禁止调用")
     @GetMapping("/authorize")
     public String authorize(@RequestParam("returnUrl") String returnUrl) {
         String url = weChatAccountProperty.getSiteUrl()+"wechat/callBack";
@@ -82,7 +82,71 @@ public class WeChatController {
         return "redirect:" + redirectUrl;
     }
 
-    @ApiOperation(value = "授权回调，禁止调用")
+    @ApiOperation(value = "微信授权-1、获取引导授权url地址")
+    @GetMapping("/getAuthorizeUrl")
+    @ResponseJSONP
+    public ResultVo<String> getAuthorizeUrl(@RequestParam("returnUrl")  @Valid @NotNull @NotBlank String returnUrl) {
+        ResultVo<String> resultVo = new ResultVo<>();
+        //String url = weChatAccountProperty.getSiteUrl()+"wechat/callBack";
+        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(returnUrl, WxConsts.OAUTH2_SCOPE_BASE, URLEncoder.encode(returnUrl));
+        resultVo.setCode(1);
+        resultVo.setMsg("请求成功");
+        resultVo.setData(redirectUrl);
+        return resultVo;
+    }
+
+    @ApiOperation(value = "微信授权-2、通过code、state获取用户信息并登陆")
+    @GetMapping("/login")
+    @ResponseJSONP
+    public ResultVo<Users> login(HttpServletRequest request,  HttpServletResponse response,@RequestParam("code") @Valid @NotNull @NotBlank String code) throws Exception {
+        ResultVo<Users> resultVo = new ResultVo<>();
+        //token redis
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken ;
+        wxMpOAuth2AccessToken = (WxMpOAuth2AccessToken)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN");
+        Long expireIn = (Long)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN_EXPIRE");
+        if(null == wxMpOAuth2AccessToken || null == expireIn || expireIn < System.currentTimeMillis()){
+            try {
+                wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+                redisTemplate.opsForValue().set("WX_ACCESS_TOKEN", wxMpOAuth2AccessToken);
+                redisTemplate.opsForValue().set("WX_ACCESS_TOKEN_EXPIRE",System.currentTimeMillis()+7000000);
+            } catch (WxErrorException e) {
+                throw new Exception("获取token失败，请稍后重试");
+            }
+        }
+
+        //String openId = wxMpOAuth2AccessToken.getOpenId();
+        WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken,"zh_CN");
+        if(StringUtils.isEmpty(wxMpUser.getOpenId())) throw  new Exception("获取用户信息失败，请稍后重试");
+        String openId = wxMpUser.getOpenId();
+
+        Users dbUsers = usersRepository.getUserByOpenId(openId);
+        Users users = new Users();
+        if(dbUsers == null){
+            users.setCity(wxMpUser.getCity() != null ? wxMpUser.getCity() : "");
+            users.setProvince(wxMpUser.getProvince() != null ? wxMpUser.getProvince() : "");
+            users.setCountry(wxMpUser.getCountry() != null ? wxMpUser.getCountry() : "");
+            users.setHeadimgurl(wxMpUser.getHeadImgUrl() != null ? wxMpUser.getHeadImgUrl() : "");
+            users.setNickname(wxMpUser.getNickname() != null ? wxMpUser.getNickname() : "");
+            users.setOpenId(wxMpUser.getOpenId() != null ? wxMpUser.getOpenId() : "");
+            users.setSex(wxMpUser.getSex() != null ? wxMpUser.getSex() : "");
+            users.setCreateTime(new Date());
+            users.setUpdateTime(new Date());
+            users = usersRepository.save(users);
+        }
+        else{
+            dbUsers.setHeadimgurl(wxMpUser.getHeadImgUrl() != null ? wxMpUser.getHeadImgUrl() : "");
+            dbUsers.setNickname(wxMpUser.getNickname() != null ? wxMpUser.getNickname() : "");
+            users = usersRepository.save(dbUsers);
+        }
+        String cookieValue = URLEncoder.encode(objectMapper.writeValueAsString(users),"UTF-8");
+        CookieUtil.set(response, weChatAccountProperty.getToken(), cookieValue, weChatAccountProperty.getExpire());
+        resultVo.setCode(1);
+        resultVo.setMsg("获取成功");
+        resultVo.setData(users);
+        return resultVo;
+    }
+
+    @ApiOperation(value = "微信授权回调，AJAX授权禁止调用")
     @GetMapping("/callBack")
     public String callBack(HttpServletRequest request,  HttpServletResponse response,@RequestParam("code") String code, @RequestParam("state") String returnUrl) throws Exception {
         //token redis
@@ -129,7 +193,7 @@ public class WeChatController {
     }
 
     @GetMapping("index")
-    @ApiOperation(value = "活动入口")
+    @ApiOperation(value = "微信授权MVC方式活动入口 AJAX授权禁止调用")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws WeChatAuthorizeException, IOException {
         Cookie cookie = CookieUtil.get(request,weChatAccountProperty.getToken());
         if(null == cookie){
