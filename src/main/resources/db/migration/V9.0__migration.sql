@@ -1,0 +1,1 @@
+alter table tb_lottery add column shopId varchar(20) default  null after address;

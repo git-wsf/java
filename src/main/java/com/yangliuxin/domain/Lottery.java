@@ -34,4 +34,7 @@ public class Lottery  extends BaseEntity<Long> {
     @Column(name = "mobile")
     private String mobile;
 
+    @Column(name = "shopId")
+    private String shopId;
+
 }

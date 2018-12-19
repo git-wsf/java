@@ -17,6 +17,7 @@ import com.yangliuxin.utils.LotteryUtil;
 import com.yangliuxin.utils.SignUtil;
 import com.yangliuxin.vo.Gift;
 import com.yangliuxin.vo.ResultVo;
+import com.yangliuxin.vo.StatsVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -286,6 +287,7 @@ public class WeChatController {
         lottery.setAddress(lotteryBean.getAddress());
         lottery.setMobile(lotteryBean.getMobile());
         lottery.setName(lotteryBean.getName());
+        lottery.setShopId(lotteryBean.getShopId());
         lottery = lotteryRepository.save(lottery);
 
         resultVo.setCode(1);
@@ -443,4 +445,30 @@ public class WeChatController {
         resultVo.setData(praise);
         return resultVo;
     }
+
+    @GetMapping("stats")
+    @ResponseJSONP
+    @ApiOperation(value = "获取门店点赞 获奖数据接口")
+    public ResultVo<StatsVo> stats(@RequestParam @NotNull @NotBlank @Valid String shopId){
+        ResultVo<StatsVo> resultVo = new ResultVo<>();
+        StatsVo statsVo = new StatsVo();
+
+        Long praiseCount = praiseRepository.getCountByShopId(shopId);
+        Long reserveCount = reserveRepository.getCountByShopId(shopId);
+        List<Reserve> reserveList = reserveRepository.getListByShopId(shopId);
+        List<Lottery> lotteryList = lotteryRepository.getListByShopId(shopId);
+
+        statsVo.setLotteryList(lotteryList);
+        statsVo.setPraiseCount(praiseCount);
+        statsVo.setReserveCount(reserveCount);
+        statsVo.setReserveList(reserveList);
+
+        resultVo.setCode(1);
+        resultVo.setMsg("请求成功");
+        resultVo.setData(statsVo);
+        return resultVo;
+    }
+
+
+
 }

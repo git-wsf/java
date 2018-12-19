@@ -29,4 +29,6 @@ public class ReserveBean {
     @NotNull
     @ApiParam("预约人手机号")
     private String mobile;
+
+
 }

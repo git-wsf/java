@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+
 @Repository
 public class ReserveRepositoryImpl implements ReserveRepository {
-
-
 
 
     @Autowired
@@ -28,5 +28,15 @@ public class ReserveRepositoryImpl implements ReserveRepository {
     @Override
     public Reserve getById(Long id) {
         return reserveDao.getOne(id);
+    }
+
+    @Override
+    public Long getCountByShopId(String shopId) {
+        return reserveDao.countByShopId(shopId);
+    }
+
+    @Override
+    public List<Reserve> getListByShopId(String shopId) {
+        return reserveDao.getAllByShopId(shopId);
     }
 }

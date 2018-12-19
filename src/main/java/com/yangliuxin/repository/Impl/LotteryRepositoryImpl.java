@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 public class LotteryRepositoryImpl implements LotteryRepository {
@@ -27,5 +28,10 @@ public class LotteryRepositoryImpl implements LotteryRepository {
     @Override
     public Lottery getById(Long id) {
         return lotteryDao.getOne(id);
+    }
+
+    @Override
+    public List<Lottery> getListByShopId(String shopId) {
+        return lotteryDao.getAllByShopId(shopId);
     }
 }
