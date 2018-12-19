@@ -55,7 +55,7 @@ import java.util.TreeMap;
 @RequestMapping("/wechat")
 @Slf4j
 @CrossOrigin
-@Api(tags = "OPPP活动接口", description = "微信先关接口API")
+@Api(tags = "VIVO活动接口", description = "微信相关接口API")
 public class WeChatController {
 
     @Autowired
