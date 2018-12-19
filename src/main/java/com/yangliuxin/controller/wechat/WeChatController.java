@@ -285,7 +285,7 @@ public class WeChatController {
 
     private Gift getCurrentGiftById(Integer id){
         for(Gift gift: giftProperty.getGiftList()){
-            if(gift.getId() == id){
+            if(gift.getId().equals(id)){
                 return gift;
             }
         }

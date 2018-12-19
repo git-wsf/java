@@ -1,0 +1,1 @@
+ALTER TABLE `tb_lottery` CHANGE `index` `ind` INT(11)  NULL  DEFAULT NULL;

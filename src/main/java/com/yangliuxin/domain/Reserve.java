@@ -16,6 +16,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class Reserve  extends BaseEntity<Long>{
 
+
+    private static final long serialVersionUID = -3994457090449816862L;
     @Column(name = "shopId")
     private String shopId;
 

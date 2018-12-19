@@ -22,6 +22,9 @@ import javax.persistence.Table;
 @ApiModel
 public class Shop  extends BaseEntity<Long> {
 
+
+    private static final long serialVersionUID = -8572291302744087058L;
+
     @Column(name = "shopId")
     @ApiModelProperty("店铺编号")
     private String shopId;

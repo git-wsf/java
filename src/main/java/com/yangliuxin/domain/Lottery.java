@@ -19,7 +19,10 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class Lottery  extends BaseEntity<Long> {
 
-    @Column(name = "index")
+
+    private static final long serialVersionUID = -2989419297411564032L;
+
+    @Column(name = "ind")
     private Integer index;
 
     @Column(name = "userId")

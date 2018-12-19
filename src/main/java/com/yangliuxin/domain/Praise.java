@@ -17,6 +17,9 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class Praise extends BaseEntity<Long> {
 
+
+    private static final long serialVersionUID = -5175143353311786599L;
+
     @Column(name = "shopId")
     private String shopId;
 
