@@ -6,18 +6,12 @@ import com.yangliuxin.bean.LotteryBean;
 import com.yangliuxin.bean.ReserveBean;
 import com.yangliuxin.bean.ShopBean;
 import com.yangliuxin.config.PropertyConfiguration;
-import com.yangliuxin.domain.Lottery;
-import com.yangliuxin.domain.Reserve;
-import com.yangliuxin.domain.Shop;
-import com.yangliuxin.domain.Users;
+import com.yangliuxin.domain.*;
 import com.yangliuxin.enums.TopShopDataEnum;
 import com.yangliuxin.exceptions.WeChatAuthorizeException;
 import com.yangliuxin.property.GiftProperty;
 import com.yangliuxin.property.WeChatAccountProperty;
-import com.yangliuxin.repository.LotteryRepository;
-import com.yangliuxin.repository.ReserveRepository;
-import com.yangliuxin.repository.ShopRepository;
-import com.yangliuxin.repository.UsersRepository;
+import com.yangliuxin.repository.*;
 import com.yangliuxin.utils.CookieUtil;
 import com.yangliuxin.utils.LotteryUtil;
 import com.yangliuxin.utils.SignUtil;
@@ -413,6 +407,40 @@ public class WeChatController {
         resultVo.setCode(1);
         resultVo.setMsg("导入成功");
         resultVo.setData(shop);
+        return resultVo;
+    }
+
+    @Autowired
+    private PraiseRepository praiseRepository;
+
+    @PostMapping("savePraise")
+    @ResponseJSONP
+    @ApiOperation(value = "点赞接口")
+    public ResultVo<Praise> savePraise(HttpServletRequest request, HttpServletResponse response, @RequestParam @NotBlank @NotNull @Valid String  shopId) throws Exception{
+        ResultVo<Praise> resultVo = new ResultVo<>();
+        Cookie cookie = CookieUtil.get(request,weChatAccountProperty.getToken());
+        if(null == cookie){
+            resultVo.setCode(0);
+            resultVo.setMsg("请先登录");
+            return resultVo;
+        }
+
+        String usersJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
+        Users users = objectMapper.readValue(usersJson,Users.class);
+        if(users == null || users.getOpenId() == null || usersRepository.getUserByOpenId(users.getOpenId()) == null){
+            resultVo.setCode(0);
+            resultVo.setMsg("请先登录");
+            return resultVo;
+        }
+
+        Praise praise = new Praise();
+        praise.setShopId(shopId);
+        praise.setUserId(users.getId().intValue());
+        praise = praiseRepository.save(praise);
+
+        resultVo.setCode(1);
+        resultVo.setMsg("请求成功");
+        resultVo.setData(praise);
         return resultVo;
     }
 }
