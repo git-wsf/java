@@ -108,7 +108,7 @@ weChat:
   secret: c97349cba93ee239af1b3e586b493111
   token: weChatToken
   expire: 72000
-  siteUrl: https://vivo.wedge2.cn/
+  siteUrl: http://sapi.wedge2.cn/
   gift:
     giftList:
     - {id: 1,name: 50元话费券, probability: 0.001, perDay: 1, total: 50}
