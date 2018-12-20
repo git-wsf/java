@@ -13,6 +13,7 @@ public class CookieUtil {
                            int maxAge){
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
+        cookie.setDomain("wedge2.cn");
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
     }
