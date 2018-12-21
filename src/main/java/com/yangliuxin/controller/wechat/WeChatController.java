@@ -482,7 +482,7 @@ public class WeChatController {
     @PostMapping("savePraise")
     @ResponseJSONP
     @ApiOperation(value = "点赞接口")
-    public ResultVo<Praise> savePraise(HttpServletRequest request, HttpServletResponse response, @RequestParam @NotBlank @NotNull @Valid String  shopId) throws Exception{
+    public ResultVo<Praise> savePraise(HttpServletRequest request, HttpServletResponse response, @RequestParam("shopId") @NotBlank @NotNull @Valid String  shopId) throws Exception{
         ResultVo<Praise> resultVo = new ResultVo<>();
         Cookie cookie = CookieUtil.get(request,weChatAccountProperty.getToken());
         if(null == cookie){
