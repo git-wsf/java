@@ -104,14 +104,14 @@ flyway:
   locations: classpath:db/migration
 
 weChat:
-  appId: wx3d5abb2cb396a10f
-  secret: c97349cba93ee239af1b3e586b493111
+  appId: wx2b9b3eacdfadae43
+  secret: 67f4e2c2fe77e8cff1e0e29251ada5ba
   token: weChatToken
   expire: 72000
   siteUrl: http://sapi.wedge2.cn/
   gift:
     giftList:
-    - {id: 1,name: 50元话费券, probability: 0.001, perDay: 1, total: 50}
-    - {id: 2,name: 爱奇艺VIP充值卡, probability: 0.01, perDay: 2, total: 100}
-    - {id: 3,name: 5元话费券, probability: 0.05, perDay: 6, total: 300}
-    - {id: 4,name: V钻, probability: 0.1, perDay: 32, total: 1630}
+    - {id: 1,name: 50元话费券, probability: 0.2, perDay: 1, total: 50}
+    - {id: 2,name: 爱奇艺VIP充值卡, probability: 0.2, perDay: 2, total: 100}
+    - {id: 3,name: 5元话费券, probability: 0.3, perDay: 6, total: 300}
+    - {id: 4,name: V钻, probability: 0.3, perDay: 32, total: 1630}
