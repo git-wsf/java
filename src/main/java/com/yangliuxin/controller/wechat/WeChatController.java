@@ -340,10 +340,11 @@ public class WeChatController {
             resultVo.setMsg("请先登录");
             return resultVo;
         }
-        log.info(">>>>>>LOTTERY_BEAN_DATA",lotteryBean);
+        log.info(">>>>>>LOTTERY_REQUEST_DATA:{}", request);
+        log.info(">>>>>>LOTTERY_BEAN_DATA:{}",lotteryBean);
         Lottery lottery = lotteryRepository.getById(lotteryBean.getId());
         if(lottery == null || !users.getId().equals(lotteryBean.getUserId()) || !lottery.getUserId().equals(lotteryBean.getUserId())  || !lottery.getInd().equals(lotteryBean.getInd())){
-            log.info(">>>>>>LOTTERY_DB_DATA",lottery);
+            log.info(">>>>>>LOTTERY_DB_DATA:{}",lottery);
             resultVo.setCode(0);
             resultVo.setMsg("不存在的中奖信息");
             return resultVo;
