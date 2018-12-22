@@ -78,7 +78,7 @@ public class WeChatController {
     @GetMapping("/authorize")
     public String authorize(@RequestParam("returnUrl") String returnUrl) {
         String url = weChatAccountProperty.getSiteUrl()+"wechat/callBack";
-        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAUTH2_SCOPE_BASE, URLEncoder.encode(returnUrl));
+        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAUTH2_SCOPE_USER_INFO, URLEncoder.encode(returnUrl));
         return "redirect:" + redirectUrl;
     }
 
@@ -88,7 +88,7 @@ public class WeChatController {
     public ResultVo<String> getAuthorizeUrl(@RequestParam("returnUrl")  @Valid @NotNull @NotBlank String returnUrl) {
         ResultVo<String> resultVo = new ResultVo<>();
         //String url = weChatAccountProperty.getSiteUrl()+"wechat/callBack";
-        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(returnUrl, WxConsts.OAUTH2_SCOPE_BASE, URLEncoder.encode(returnUrl));
+        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(returnUrl, WxConsts.OAUTH2_SCOPE_USER_INFO, URLEncoder.encode(returnUrl));
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(redirectUrl);
