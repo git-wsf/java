@@ -16,7 +16,7 @@ public class LotteryBean {
 
     @NotNull
     @ApiParam("中奖等级")
-    private Integer index;
+    private Integer ind;
 
     @NotNull
     @ApiParam("中奖用户id")

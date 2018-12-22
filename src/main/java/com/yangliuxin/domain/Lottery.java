@@ -23,7 +23,7 @@ public class Lottery  extends BaseEntity<Long> {
     private static final long serialVersionUID = -2989419297411564032L;
 
     @Column(name = "ind")
-    private Integer index;
+    private Integer ind;
 
     @Column(name = "userId")
     private Integer userId;
