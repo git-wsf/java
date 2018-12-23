@@ -91,7 +91,7 @@ public class Shop  extends BaseEntity<Long> {
     private String ddd;
 
     @Transient
-    private Long lotteryCount;
+    private Integer lotteryCount;
 
     public Shop(ShopBean shopBean){
         shopId = shopBean.getShopId();
