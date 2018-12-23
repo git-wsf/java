@@ -58,4 +58,9 @@ public class ShopRepositoryImpl implements ShopRepository {
         return list;
     }
 
+    @Override
+    public Shop getStandardShopData(String shopId) {
+        return shopDao.getFirstByShopId(shopId);
+    }
+
 }

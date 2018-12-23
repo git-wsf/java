@@ -13,4 +13,6 @@ public interface ShopRepository {
 
     List<Shop> getTopShopData(Integer brand, String ddd);
 
+    Shop getStandardShopData(String shopId);
+
 }

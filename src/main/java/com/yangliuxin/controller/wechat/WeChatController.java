@@ -233,7 +233,7 @@ public class WeChatController {
     @GetMapping("lottery")
     @ResponseJSONP
     @ApiOperation(value = "抽奖接口")
-    public ResultVo<Lottery> lottery(HttpServletRequest request, HttpServletResponse response) throws WeChatAuthorizeException,Exception{
+    public ResultVo<Lottery> lottery(HttpServletRequest request, HttpServletResponse response, @RequestParam("shopId") @Valid @NotNull @NotBlank  String shopId) throws WeChatAuthorizeException,Exception{
         ResultVo<Lottery> resultVo = new ResultVo<>();
         Cookie cookie = CookieUtil.get(request,weChatAccountProperty.getToken());
         if(null == cookie){
@@ -247,6 +247,19 @@ public class WeChatController {
         if(users == null || users.getOpenId() == null || usersRepository.getUserByOpenId(users.getOpenId()) == null){
             resultVo.setCode(0);
             resultVo.setMsg("请先登录");
+            return resultVo;
+        }
+
+        Shop shopStandardData = shopRepository.getStandardShopData(shopId);
+        if(shopStandardData == null){
+            resultVo.setCode(0);
+            resultVo.setMsg("不存在的店面信息！");
+            return resultVo;
+        }
+        Long giftShopIdDayCount = redisTemplate.opsForValue().increment("GIFT_SHOP_ID_DAY_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 1L);
+        if(giftShopIdDayCount > 3){
+            resultVo.setCode(-5);
+            resultVo.setMsg("店面抽奖已经超过3次！");
             return resultVo;
         }
 
@@ -275,6 +288,7 @@ public class WeChatController {
         Lottery lottery = new Lottery();
         lottery.setInd(originalIndex);
         lottery.setUserId(Integer.parseInt(users.getId().toString()));
+        lottery.setShopId(shopId);
         lottery = lotteryRepository.save(lottery);
 
         resultVo.setCode(1);
@@ -343,7 +357,7 @@ public class WeChatController {
         log.info(">>>>>>LOTTERY_REQUEST_DATA:{}", request);
         log.info(">>>>>>LOTTERY_BEAN_DATA:{}",lotteryBean);
         Lottery lottery = lotteryRepository.getById(lotteryBean.getId());
-        if(lottery == null || !users.getId().equals(lotteryBean.getUserId().longValue()) || !lottery.getUserId().equals(lotteryBean.getUserId())  || !lottery.getInd().equals(lotteryBean.getInd())){
+        if(lottery == null || !users.getId().equals(lotteryBean.getUserId().longValue()) || !lottery.getUserId().equals(lotteryBean.getUserId())  || !lottery.getInd().equals(lotteryBean.getInd()) || !lotteryBean.getShopId().equals(lottery.getShopId())){
             log.info(">>>>>>LOTTERY_DB_DATA:{}",lottery);
             resultVo.setCode(0);
             resultVo.setMsg("不存在的中奖信息");

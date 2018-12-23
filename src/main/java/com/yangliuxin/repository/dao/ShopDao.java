@@ -22,5 +22,7 @@ public interface ShopDao  extends JpaRepository<Shop, Long>, JpaSpecificationExe
 
     List<Shop> findTop10ByDddOrderBySpringProvinceCountAsc(String ddd);
 
+    Shop getFirstByShopId(String shopId);
+
 
 }
