@@ -34,7 +34,7 @@ public class ShopRepositoryImpl implements ShopRepository {
     }
 
     @Override
-    public List<Shop> getTopShopData(Integer brand, String ddd) {
+    public List<Shop> getTopShopData(Integer brand, String ddd, String province) {
         List<Shop> list = new ArrayList<>();
         if(brand == 1){
             list = shopDao.findTop10ByDddOrderByDayCountryCountAsc(ddd);
@@ -46,14 +46,14 @@ public class ShopRepositoryImpl implements ShopRepository {
             list = shopDao.findTop10ByDddOrderByWeekCountryCountAsc(ddd);
         }
         else if(brand == 4){
-            list = shopDao.findTop10ByDddOrderByWeekProvinceCountAsc(ddd);
+            list = shopDao.findTop10ByDddAndProvinceOrderByWeekProvinceCountAsc(ddd, province);
         }
 
         else if(brand == 6){
             list = shopDao.findTop10ByDddOrderBySpringCountryCountAsc(ddd);
         }
         else if(brand == 7){
-            list = shopDao.findTop10ByDddOrderBySpringProvinceCountAsc(ddd);
+            list = shopDao.findTop10ByDddAndProvinceOrderBySpringProvinceCountAsc(ddd, province);
         }
         return list;
     }

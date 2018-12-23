@@ -432,10 +432,10 @@ public class WeChatController {
     @GetMapping("getTopShopData")
     @ResponseJSONP
     @ApiOperation(value = "获取当天各排名数据")
-    public ResultVo<List<Shop>> getTopShopData(@RequestParam("brand") @NotNull @NotBlank @Valid TopShopDataEnum brand){
+    public ResultVo<List<Shop>> getTopShopData(@RequestParam("brand") @NotNull @NotBlank @Valid TopShopDataEnum brand, @RequestParam("province") @NotNull @NotBlank @Valid String province){
         ResultVo<List<Shop>> resultVo = new ResultVo<>();
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        List<Shop> list = shopRepository.getTopShopData(brand.getCode(), today);
+        List<Shop> list = shopRepository.getTopShopData(brand.getCode(), today, province);
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(list);

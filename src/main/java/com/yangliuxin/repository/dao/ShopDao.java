@@ -16,11 +16,11 @@ public interface ShopDao  extends JpaRepository<Shop, Long>, JpaSpecificationExe
 
     List<Shop> findTop10ByDddOrderByWeekCountryCountAsc(String ddd);
 
-    List<Shop> findTop10ByDddOrderByWeekProvinceCountAsc(String ddd);
+    List<Shop> findTop10ByDddAndProvinceOrderByWeekProvinceCountAsc(String ddd, String province);
 
     List<Shop> findTop10ByDddOrderBySpringCountryCountAsc(String ddd);
 
-    List<Shop> findTop10ByDddOrderBySpringProvinceCountAsc(String ddd);
+    List<Shop> findTop10ByDddAndProvinceOrderBySpringProvinceCountAsc(String ddd, String province);
 
     Shop getFirstByShopId(String shopId);
 
