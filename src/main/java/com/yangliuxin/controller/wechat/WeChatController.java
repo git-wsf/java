@@ -423,6 +423,7 @@ public class WeChatController {
         ResultVo<Shop> resultVo = new ResultVo<>();
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         Shop shop = shopRepository.getShopData(shopId, today);
+        shop.setLotteryCount((Long)redisTemplate.opsForValue().get("GIFT_SHOP_ID_DAY_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))));
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(shop);
@@ -546,6 +547,21 @@ public class WeChatController {
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(statsVo);
+        return resultVo;
+    }
+
+    @GetMapping("lotteryResult")
+    @ResponseJSONP
+    @ApiOperation(value = "获取门店中奖列表")
+    public ResultVo<List<Lottery>> lotteryResult(@RequestParam @NotNull @NotBlank @Valid String shopId){
+        ResultVo<List<Lottery>> resultVo = new ResultVo<>();
+        StatsVo statsVo = new StatsVo();
+
+        List<Lottery> lotteries = lotteryRepository.getListByShopId(shopId);
+
+        resultVo.setCode(1);
+        resultVo.setMsg("请求成功");
+        resultVo.setData(lotteries);
         return resultVo;
     }
 

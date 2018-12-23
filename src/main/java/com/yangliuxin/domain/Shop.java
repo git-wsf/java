@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -88,6 +89,9 @@ public class Shop  extends BaseEntity<Long> {
     @Column(name = "ddd")
     @ApiModelProperty("日期-格式形如20181231")
     private String ddd;
+
+    @Transient
+    private Long lotteryCount;
 
     public Shop(ShopBean shopBean){
         shopId = shopBean.getShopId();
