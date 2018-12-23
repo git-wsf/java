@@ -107,7 +107,7 @@ weChat:
   appId: wx2b9b3eacdfadae43
   secret: 67f4e2c2fe77e8cff1e0e29251ada5ba
   token: weChatToken
-  expire: 72000
+  expire: 720000
   siteUrl: http://sapi.wedge2.cn/
   gift:
     giftList:
