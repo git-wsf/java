@@ -111,8 +111,8 @@ weChat:
   siteUrl: http://sapi.wedge2.cn/
   gift:
     giftList:
-    - {id: 1,name: X23幻彩版, probability: 0.2, perDay: 1, total: 50}
-    - {id: 2,name: 施瓦洛士奇银质项链, probability: 0.2, perDay: 2, total: 100}
-    - {id: 3,name: Zack蓝牙音箱, probability: 0.2, perDay: 6, total: 300}
-    - {id: 4,name: 爱奇艺会员月卡, probability: 0.2, perDay: 32, total: 1630}
-    - {id: 5,name: 5元话费(三网通用), probability: 0.2, perDay: 32, total: 1630}
+    - {id: 1,name: X23幻彩版, probability: 0.0001, perDay: 1, total: 1}
+    - {id: 2,name: 施瓦洛士奇银质项链, probability: 0.001, perDay: 1, total: 3}
+    - {id: 3,name: Zack蓝牙音箱, probability: 0.01, perDay: 1, total: 5}
+    - {id: 4,name: 爱奇艺会员月卡, probability: 0.01, perDay: 3, total: 100}
+    - {id: 5,name: 5元话费(三网通用), probability: 0.2, perDay: 10, total: 300}
