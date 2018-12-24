@@ -423,6 +423,7 @@ public class WeChatController {
         ResultVo<Shop> resultVo = new ResultVo<>();
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         Shop shop = shopRepository.getShopData(shopId, today);
+        redisTemplate.opsForValue().increment("GIFT_SHOP_ID_DAY_"+shopId+"_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),0L);
         shop.setLotteryCount((Integer)redisTemplate.opsForValue().get("GIFT_SHOP_ID_DAY_"+shopId+"_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))));
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
