@@ -11,7 +11,7 @@ public interface ShopRepository {
 
     Shop getShopData(String shopId, String ddd);
 
-    List<Shop> getTopShopData(Integer brand, String ddd, String province);
+    List<Shop> getTopShopData(Integer brand, String ddd, String province, String level);
 
     Shop getStandardShopData(String shopId);
 

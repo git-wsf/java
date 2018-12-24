@@ -14,13 +14,13 @@ public interface ShopDao  extends JpaRepository<Shop, Long>, JpaSpecificationExe
 
     List<Shop> findTop10ByDddOrderByDayProvinceCountAsc(String ddd);
 
-    List<Shop> findTop10ByDddOrderByWeekCountryCountAsc(String ddd);
+    List<Shop> findTop10ByDddAndLevelOrderByWeekCountryCountAsc(String ddd, String level);
 
-    List<Shop> findTop10ByDddAndProvinceOrderByWeekProvinceCountAsc(String ddd, String province);
+    List<Shop> findTop10ByDddAndProvinceAndLevelOrderByWeekProvinceCountAsc(String ddd, String province, String level);
 
-    List<Shop> findTop10ByDddOrderBySpringCountryCountAsc(String ddd);
+    List<Shop> findTop10ByDddAndLevelOrderBySpringCountryCountAsc(String ddd, String level);
 
-    List<Shop> findTop10ByDddAndProvinceOrderBySpringProvinceCountAsc(String ddd, String province);
+    List<Shop> findTop10ByDddAndProvinceAndLevelOrderBySpringProvinceCountAsc(String ddd, String province, String level);
 
     Shop getFirstByShopId(String shopId);
 
