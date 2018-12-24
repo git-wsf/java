@@ -256,7 +256,7 @@ public class WeChatController {
             resultVo.setMsg("不存在的店面信息！");
             return resultVo;
         }
-        Long giftShopIdDayCount = redisTemplate.opsForValue().increment("GIFT_SHOP_ID_DAY_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 1L);
+        Long giftShopIdDayCount = redisTemplate.opsForValue().increment("GIFT_SHOP_ID_DAY_"+shopId+"_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 1L);
         if(giftShopIdDayCount > 3){
             resultVo.setCode(-5);
             resultVo.setMsg("店面抽奖已经超过3次！");
@@ -423,7 +423,7 @@ public class WeChatController {
         ResultVo<Shop> resultVo = new ResultVo<>();
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         Shop shop = shopRepository.getShopData(shopId, today);
-        shop.setLotteryCount((Integer)redisTemplate.opsForValue().get("GIFT_SHOP_ID_DAY_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))));
+        shop.setLotteryCount((Integer)redisTemplate.opsForValue().get("GIFT_SHOP_ID_DAY_"+shopId+"_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))));
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(shop);
