@@ -10,4 +10,6 @@ public interface LotteryRepository {
     Lottery getById(Long id);
 
     List<Lottery> getListByShopId(String shopId);
+
+    List<Lottery> getAllList();
 }

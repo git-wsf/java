@@ -34,4 +34,9 @@ public class LotteryRepositoryImpl implements LotteryRepository {
     public List<Lottery> getListByShopId(String shopId) {
         return lotteryDao.getAllByShopId(shopId);
     }
+
+    @Override
+    public List<Lottery> getAllList() {
+        return lotteryDao.findAll();
+    }
 }

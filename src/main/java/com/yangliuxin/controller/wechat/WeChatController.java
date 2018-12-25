@@ -566,6 +566,20 @@ public class WeChatController {
         return resultVo;
     }
 
+    @GetMapping("lotteryAllResult")
+    @ResponseJSONP
+    @ApiOperation(value = "获取所有门店中奖列表")
+    public ResultVo<List<Lottery>> lotteryAllResult(){
+        ResultVo<List<Lottery>> resultVo = new ResultVo<>();
+        StatsVo statsVo = new StatsVo();
+
+        List<Lottery> lotteries = lotteryRepository.getAllList();
+
+        resultVo.setCode(1);
+        resultVo.setMsg("请求成功");
+        resultVo.setData(lotteries);
+        return resultVo;
+    }
 
 
 }
