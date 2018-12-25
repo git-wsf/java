@@ -426,7 +426,7 @@ public class WeChatController {
     @ApiOperation(value = "根据店铺号码获取店铺当天数据信息")
     public ResultVo<Shop> getShopData(@RequestParam("shopId") @NotNull @Valid String shopId){
         ResultVo<Shop> resultVo = new ResultVo<>();
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         Shop shop = shopRepository.getShopData(shopId, today);
         redisTemplate.opsForValue().increment("GIFT_SHOP_ID_DAY_"+shopId+"_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),0L);
         shop.setLotteryCount((Integer)redisTemplate.opsForValue().get("GIFT_SHOP_ID_DAY_"+shopId+"_"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))));
@@ -441,7 +441,7 @@ public class WeChatController {
     @ApiOperation(value = "获取当天各排名数据")
     public ResultVo<List<Shop>> getTopShopData(@RequestParam("brand") @NotNull @NotBlank @Valid TopShopDataEnum brand, @RequestParam("province") @NotNull @NotBlank @Valid String province, @RequestParam("level") @NotNull @NotBlank @Valid String level){
         ResultVo<List<Shop>> resultVo = new ResultVo<>();
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         List<Shop> list = shopRepository.getTopShopData(brand.getCode(), today, province, level);
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
