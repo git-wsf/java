@@ -127,11 +127,11 @@ public class UserRepositoryBaseImpl implements UserRepository {
             if (params.containsKey("orderBy") && !StringUtils.isEmpty(params.get("orderBy"))) {
                 sb.append(" ").append(params.get("orderBy")).append(" ");
             }
-            if (offset > 0) {
+            if (offset >= 0 && limit != null && limit>0) {
                 sb.append(" limit ").append(offset);
             }
 
-            if (limit > 0) {
+            if (limit != null && limit > 0) {
                 sb.append(",  ").append(limit);
             }
         }

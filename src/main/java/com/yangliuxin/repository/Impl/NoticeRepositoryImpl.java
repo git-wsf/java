@@ -81,11 +81,11 @@ public class NoticeRepositoryImpl implements NoticeRepository {
             }
         }
 
-        if(offset != null && offset>0){
+        if(offset != null && offset>=0 && limit != null && limit>0){
             sb.append(" limit ").append(offset);
         }
 
-        if(limit != null && limit>0){
+        if(limit != null && limit>=0){
             sb.append(",  ").append(limit);
         }
         return sb.toString();

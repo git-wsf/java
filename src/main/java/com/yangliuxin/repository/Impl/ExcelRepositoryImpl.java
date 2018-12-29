@@ -1,10 +1,8 @@
 package com.yangliuxin.repository.Impl;
 
-import com.yangliuxin.domain.FileInfo;
-import com.yangliuxin.domain.Notice;
-import com.yangliuxin.repository.FileInfoRepository;
-import com.yangliuxin.repository.dao.FileInfoDao;
-import com.yangliuxin.repository.dao.NoticeDao;
+import com.yangliuxin.domain.Excel;
+import com.yangliuxin.repository.ExcelRepository;
+import com.yangliuxin.repository.dao.ExcelDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -14,13 +12,10 @@ import javax.persistence.Query;
 import java.util.List;
 import java.util.Map;
 
-
 @Repository
-public class FileInfoRepositoryImpl implements FileInfoRepository {
-
-
+public class ExcelRepositoryImpl implements ExcelRepository {
     @Autowired
-    private FileInfoDao fileInfoDao;
+    private ExcelDao excelDao;
 
 
     @Autowired
@@ -28,37 +23,37 @@ public class FileInfoRepositoryImpl implements FileInfoRepository {
 
 
     @Override
-    public FileInfo getById(String id) {
-        return fileInfoDao.findById(id);
+    public Excel getById(String id) {
+        return excelDao.findById(id);
     }
 
     @Override
-    public int save(FileInfo fileInfo) {
-        fileInfoDao.save(fileInfo);
+    public int save(Excel Excel) {
+        excelDao.save(Excel);
         return 1;
     }
 
     @Override
-    public int update(FileInfo fileInfo) {
-        fileInfoDao.save(fileInfo);
+    public int update(Excel Excel) {
+        excelDao.save(Excel);
         return 1;
     }
 
     @Override
     public int delete(String id) {
-        fileInfoDao.delete(Long.parseLong(id));
+        excelDao.delete(Long.parseLong(id));
         return 1;
     }
 
     @Override
     public int count(Map<String, Object> params) {
-        return ((int) (fileInfoDao.count()));
+        return ((int) (excelDao.count()));
     }
 
     @Override
-    public List<FileInfo> list(Map<String, Object> params, Integer offset, Integer limit) {
+    public List<Excel> list(Map<String, Object> params, Integer offset, Integer limit) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from file_info t ");
+        sb.append("select * from tb_excel t ");
 
         if(params != null && params.containsKey("orderBy") && !StringUtils.isEmpty(params.get("orderBy"))){
             sb.append(" ").append(params.get("orderBy")).append(" ");
@@ -72,7 +67,7 @@ public class FileInfoRepositoryImpl implements FileInfoRepository {
         }
 
         String sql = sb.toString();
-        Query userQuery = entityManager.createNativeQuery(sql, FileInfo.class);
+        Query userQuery = entityManager.createNativeQuery(sql, Excel.class);
         return userQuery.getResultList();
     }
 }

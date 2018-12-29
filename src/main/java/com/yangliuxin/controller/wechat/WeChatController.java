@@ -34,10 +34,15 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Workbook;
 //import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +53,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.FileInputStream;
 import java.io.IOException;
 //import java.io.InputStream;
 import java.net.URLDecoder;
@@ -585,63 +591,6 @@ public class WeChatController {
         resultVo.setData(lotteries);
         return resultVo;
     }
-
-//    @GetMapping("importExcel")
-//    @ResponseJSONP
-//    @ApiOperation(value = "导入数据")
-//    public List<Shop> batchImport(MultipartFile file) throws IOException {
-//        String fileName = file.getOriginalFilename();
-//        boolean notNull = false;
-//        List<Shop> userList = new ArrayList<Shop>();
-//        String message = null;
-//
-//        if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$"))
-//        {
-//            message = "上传文件格式不正确";
-//            log.error(message);
-//            throw new RuntimeException(message);
-//        }
-//        boolean isExcel2003 = true;
-//        if (fileName.matches("^.+\\.(?i)(xlsx)$"))
-//        {
-//            isExcel2003 = false;
-//        }
-//        InputStream is = file.getInputStream();
-//        Workbook wb = null;
-//        if (isExcel2003)
-//        {
-//            wb = new HSSFWorkbook(is);
-//        }
-//        else
-//        {
-//            wb = new XSSFWorkbook(is);
-//        }
-//        Sheet sheet = wb.getSheetAt(0);
-//        if(sheet != null)
-//        {
-//            notNull = true;
-//        }
-//        log.info("导入用户文件" + notNull);
-//        Shop shop = null;
-//        for (int r = 1; r <= sheet.getLastRowNum(); r++)
-//        {
-//            Row row = sheet.getRow(r);
-//            if (row == null || row.getCell(0) == null)
-//            {
-//                continue;
-//            }
-//            shop = new Shop();
-//            row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
-//            String account = row.getCell(0).getStringCellValue();
-//
-//            row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-//            String name = row.getCell(1).getStringCellValue();
-//            // 一些其他参数，根据需要 用相应的类接收。。。
-//            userList.add(shop);
-//        }
-//
-//        return userList;
-//    }
 
 
 }

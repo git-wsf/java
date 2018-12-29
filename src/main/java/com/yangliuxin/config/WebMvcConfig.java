@@ -15,7 +15,7 @@ import java.io.File;
 import java.util.List;
 
 @Configuration
-public abstract class WebMvcConfig implements WebMvcConfigurer {
+public  class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -53,8 +53,9 @@ public abstract class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**")
+        registry.addResourceHandler("/statics/**")
                 .addResourceLocations(ResourceUtils.FILE_URL_PREFIX + filesPath + File.separator);
+        super.addResourceHandlers(registry);
     }
 
 }
