@@ -100,7 +100,7 @@ public class ExcelServiceImpl implements ExcelService {
             shop.setSpring(Double.valueOf(row.getCell(11).getStringCellValue()).intValue());
             shop.setSpringCountryCount(Integer.parseInt(row.getCell(12).getStringCellValue()));
             shop.setSpringProvinceCount(Integer.parseInt(row.getCell(13).getStringCellValue()));
-            shop.setPercent("%" + String.format("%.2f", Double.valueOf(row.getCell(14).getStringCellValue())*100));
+            shop.setPercent(String.format("%.2f", Double.valueOf(row.getCell(14).getStringCellValue())*100)+"%");
             shop.setDdd(row.getCell(15).getStringCellValue());
 
             shopList.add(shopRepository.save(shop));
