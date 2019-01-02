@@ -40,12 +40,15 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -582,13 +585,34 @@ public class WeChatController {
     @ApiOperation(value = "获取所有门店中奖列表")
     public ResultVo<List<Lottery>> lotteryAllResult(){
         ResultVo<List<Lottery>> resultVo = new ResultVo<>();
-        StatsVo statsVo = new StatsVo();
-
         List<Lottery> lotteries = lotteryRepository.getAllList();
 
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(lotteries);
+        return resultVo;
+    }
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${shopData.url}")
+    private String shopDataUrl;
+
+    @Value("${shopData.method}")
+    private String shopDataMethod;
+
+    public ResultVo<Long> fetchShopData(){
+        ResultVo<Long> resultVo = new ResultVo<>();
+        Long count = 0L;
+        String today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        String apiURL = shopDataUrl + "/" + shopDataMethod;
+        //return restTemplate.getForObject(apiURL, User.class);
+
+        resultVo.setCode(1);
+        resultVo.setMsg("请求成功");
+        resultVo.setData(count);
         return resultVo;
     }
 
