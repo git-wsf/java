@@ -118,5 +118,5 @@ weChat:
     - {id: 5,name: 5元话费(三网通用), probability: 0.2, perDay: 14, total: 800}
 
 shopData:
-  url: http://120.78.243.54:8080/router
+  url: https://retails-service.vivo.xyz/router?
   method: cloud.data.score.dealerscore.query.inf

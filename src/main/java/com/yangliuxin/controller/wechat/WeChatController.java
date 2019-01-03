@@ -15,6 +15,7 @@ import com.yangliuxin.repository.*;
 import com.yangliuxin.utils.CookieUtil;
 import com.yangliuxin.utils.LotteryUtil;
 import com.yangliuxin.utils.SignUtil;
+import com.yangliuxin.vo.DealerScoreQueryResp;
 import com.yangliuxin.vo.Gift;
 import com.yangliuxin.vo.ResultVo;
 import com.yangliuxin.vo.StatsVo;
@@ -28,42 +29,49 @@ import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.net.ssl.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 //import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 //import org.apache.poi.ss.usermodel.Cell;
 //import org.apache.poi.ss.usermodel.Row;
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Workbook;
 //import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.FileInputStream;
-import java.io.IOException;
 //import java.io.InputStream;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 @Controller
 @RequestMapping("/wechat")
@@ -602,19 +610,174 @@ public class WeChatController {
     @Value("${shopData.method}")
     private String shopDataMethod;
 
-    public ResultVo<Long> fetchShopData(){
-        ResultVo<Long> resultVo = new ResultVo<>();
-        Long count = 0L;
+    @GetMapping("loadShopData")
+    @ResponseJSONP
+    @ApiOperation(value = "抓取门店数据")
+    @Scheduled(cron = "0 0 3 * * ?")
+    public ResultVo<Integer> fetchShopData() throws Exception {
+        ResultVo<Integer> resultVo = new ResultVo<>();
         String today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String queryDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        String apiURL = shopDataUrl + "/" + shopDataMethod;
-        //return restTemplate.getForObject(apiURL, User.class);
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String appkey = "vivo-tz-h5";
+        String appsecret = "d1a05db8ad824533b3cdea40d90152e9";
+        String version = "1.0";
+
+        String json = "{\"method\":\"cloud.data.score.dealerscore.query.inf\",\"langCode\":\"zh_CN\",\"queryDate\":\""+queryDate+"\"}";
+
+        String signStr = appkey + appsecret + "appKey" + appkey + "format" + "json" + "param_json" + json + "timestamp" + timestamp + "version" + version + appsecret + appkey;
+        String sign = sign(signStr);
+        System.out.println(sign);
+        String url = shopDataUrl +"appKey="+appkey+"&format=json&version="+version+"&timestamp="+URLEncoder.encode(timestamp,"utf-8")+"&sign="+sign;
+
+        String result = sendPost(url, json, new HashMap<String,String>(), "UTF-8");
+        System.out.println(result);
+
+        DealerScoreQueryResp dealerScoreQueryResp  = objectMapper.readValue(result, DealerScoreQueryResp.class);
+        System.out.println(dealerScoreQueryResp);
+        List<DealerScoreQueryResp.DealerScore> objectResult = dealerScoreQueryResp.getObjectResult();
+        System.out.println(objectResult.get(0).getFirstLevelAgentName());
+        //导入逻辑
+        List<Shop> shops = new ArrayList<>();
+        for (DealerScoreQueryResp.DealerScore dealerScore: objectResult) {
+            Shop existShop = shopRepository.getShopData(dealerScore.getStoreCode(),today);
+            if(existShop == null){
+                Shop shop = new Shop();
+                shop.setShopId(dealerScore.getStoreCode());
+                shop.setShopName(dealerScore.getStoreName());
+                shop.setLevel(dealerScore.getStoreType());
+                shop.setAddress(dealerScore.getStoreAddress());
+                shop.setProvince(dealerScore.getFirstLevelAgentName());
+                shop.setDay(Double.valueOf(dealerScore.getScoreItems().get(0).getYesterdayScore()).intValue() );
+                shop.setDayProvinceCount(Integer.parseInt(dealerScore.getPeriodRankingItems().get(0).getYesterdayScoreRanking()));
+                shop.setDayCountryCount(Integer.parseInt(dealerScore.getNationalRankingItems().get(0).getYesterdayScoreRanking()));
+                shop.setWeek(Double.valueOf(dealerScore.getScoreItems().get(0).getPeriodScore()).intValue());
+                shop.setWeekProvinceCount(Integer.parseInt(dealerScore.getPeriodRankingItems().get(0).getPeriodScoreRanking()));
+                shop.setWeekCountryCount(Integer.parseInt(dealerScore.getNationalRankingItems().get(0).getPeriodScoreRanking()));
+                shop.setSpring(Double.valueOf(dealerScore.getScoreItems().get(0).getYesterdayScore()).intValue());
+                shop.setSpringProvinceCount(Integer.parseInt(dealerScore.getPeriodRankingItems().get(0).getTotalScoreRanking()));
+                shop.setSpringCountryCount(Integer.parseInt(dealerScore.getNationalRankingItems().get(0).getTotalScoreRanking()));
+                shop.setPercent(dealerScore.getBeatPercentage()+"%");
+                shop.setDdd(today);
+                shop = shopRepository.save(shop);
+                shops.add(shop);
+            }
+        }
+
 
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
-        resultVo.setData(count);
+        resultVo.setData(shops.size());
         return resultVo;
     }
 
 
+    private static String sign(String data) throws Exception{
+        byte[] bytes = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            bytes = md.digest(data.getBytes("utf-8"));
+            StringBuilder sign = new StringBuilder();
+            for (int i = 0; i < bytes.length; i++) {
+                String hex = Integer.toHexString(bytes[i] & 0xFF);
+                if (hex.length() == 1) {
+                    sign.append("0");
+                }
+                sign.append(hex.toUpperCase());
+            }
+            return sign.toString();
+        } catch (GeneralSecurityException gse) {
+            throw new IOException(gse);
+        }
+    }
+
+    private  String sendPost(String url, String params, Map<String, String> headersMap, String charSet) {
+        OutputStream out = null;
+        BufferedReader in = null;
+        try {
+            //URL realUrl = new URL(url);
+
+            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");//第一个参数为 返回实现指定安全套接字协议的SSLContext对象。第二个为提供者
+            TrustManager[] tm = {new MyX509TrustManager()};
+            sslContext.init(null, tm, new SecureRandom());
+            SSLSocketFactory ssf = sslContext.getSocketFactory();
+
+            URL realUrl = new URL(url);
+            HttpsURLConnection conn = (HttpsURLConnection) realUrl.openConnection();
+            conn.setSSLSocketFactory(ssf);
+
+
+            // 打开和URL之间的连接
+            //HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent","Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
+            conn.setRequestProperty("Charsert", "UTF-8");
+            conn.setRequestProperty("Content-Type", "text/html;charset=UTF-8");
+            // 设置通用的请求属性
+            if (headersMap != null) {
+                for (String key : headersMap.keySet()) {
+                    conn.setRequestProperty(key, headersMap.get(key));
+                }
+            }
+
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setConnectTimeout(15000);
+            // 建立实际的链接
+            conn.connect();
+            out = conn.getOutputStream();
+
+            // 发送请求
+            out.write(params.getBytes());
+            out.flush();
+
+            // 获取结果
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream(), charSet));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                result.append(line);
+            }
+            return result.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+}
+
+class MyX509TrustManager implements X509TrustManager {
+
+ @Override
+ public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+     // TODO Auto-generated method stub
+
+ }
+
+ @Override
+ public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+     // TODO Auto-generated method stub
+
+ }
+
+ @Override
+ public X509Certificate[] getAcceptedIssuers() {
+     // TODO Auto-generated method stub
+     return null;
+ }
 }
