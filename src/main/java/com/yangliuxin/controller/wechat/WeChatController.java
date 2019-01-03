@@ -50,13 +50,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
+import java.net.*;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
@@ -613,7 +608,7 @@ public class WeChatController {
     @GetMapping("loadShopData")
     @ResponseJSONP
     @ApiOperation(value = "抓取门店数据")
-    @Scheduled(cron = "0 0 3 * * ?")
+    @Scheduled(cron = "0 0 2,3,4 * * ?")
     public ResultVo<Integer> fetchShopData() throws Exception {
         ResultVo<Integer> resultVo = new ResultVo<>();
         String today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -692,24 +687,49 @@ public class WeChatController {
         }
     }
 
-    private  String sendPost(String url, String params, Map<String, String> headersMap, String charSet) {
-        OutputStream out = null;
-        BufferedReader in = null;
-        try {
-            //URL realUrl = new URL(url);
-
+    private HttpURLConnection getHttpsConnection(String url) throws NoSuchProviderException, NoSuchAlgorithmException, KeyManagementException, IOException {
+        if(url.contains("https")){
             SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");//第一个参数为 返回实现指定安全套接字协议的SSLContext对象。第二个为提供者
             TrustManager[] tm = {new MyX509TrustManager()};
             sslContext.init(null, tm, new SecureRandom());
             SSLSocketFactory ssf = sslContext.getSocketFactory();
 
             URL realUrl = new URL(url);
+
             HttpsURLConnection conn = (HttpsURLConnection) realUrl.openConnection();
             conn.setSSLSocketFactory(ssf);
+            return conn;
+        } else {
+            URL realUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            return conn;
+        }
+    }
+
+    private  String sendPost(String url, String params, Map<String, String> headersMap, String charSet) {
+        OutputStream out = null;
+        BufferedReader in = null;
+        try {
+            //URL realUrl = new URL(url);
+            HttpURLConnection conn = getHttpsConnection(url);
+//            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");//第一个参数为 返回实现指定安全套接字协议的SSLContext对象。第二个为提供者
+//            TrustManager[] tm = {new MyX509TrustManager()};
+//            sslContext.init(null, tm, new SecureRandom());
+//            SSLSocketFactory ssf = sslContext.getSocketFactory();
+//
+//            URL realUrl = new URL(url);
+//
+//            if(url.contains("https")){
+//                HttpsURLConnection conn = (HttpsURLConnection) realUrl.openConnection();
+//                conn.setSSLSocketFactory(ssf);
+//            } else {
+//                HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+//            }
+
 
 
             // 打开和URL之间的连接
-            //HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            //
             conn.setRequestMethod("POST");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestProperty("user-agent","Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
