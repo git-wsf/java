@@ -608,7 +608,7 @@ public class WeChatController {
     @GetMapping("loadShopData")
     @ResponseJSONP
     @ApiOperation(value = "抓取门店数据")
-    @Scheduled(cron = "0 0 2,3,4 * * ?")
+    @Scheduled(cron = "0 0/30 * * * ?")
     public ResultVo<Integer> fetchShopData() throws Exception {
         ResultVo<Integer> resultVo = new ResultVo<>();
         String today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -628,11 +628,18 @@ public class WeChatController {
 
         String result = sendPost(url, json, new HashMap<String,String>(), "UTF-8");
         System.out.println(result);
+        log.info("fetch shop data:{}", result);
 
         DealerScoreQueryResp dealerScoreQueryResp  = objectMapper.readValue(result, DealerScoreQueryResp.class);
+        if(dealerScoreQueryResp.getObjectResult() == null){
+            resultVo.setCode(0);
+            resultVo.setMsg("请求失败");
+            resultVo.setData(0);
+            return resultVo;
+        }
         System.out.println(dealerScoreQueryResp);
         List<DealerScoreQueryResp.DealerScore> objectResult = dealerScoreQueryResp.getObjectResult();
-        System.out.println(objectResult.get(0).getFirstLevelAgentName());
+        //System.out.println(objectResult.get(0).getFirstLevelAgentName());
         //导入逻辑
         List<Shop> shops = new ArrayList<>();
         for (DealerScoreQueryResp.DealerScore dealerScore: objectResult) {
