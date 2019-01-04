@@ -650,7 +650,7 @@ public class WeChatController {
                 shop.setWeek(Double.valueOf(dealerScore.getScoreItems().get(0).getPeriodScore()).intValue());
                 shop.setWeekProvinceCount(Integer.parseInt(dealerScore.getPeriodRankingItems().get(0).getPeriodScoreRanking()));
                 shop.setWeekCountryCount(Integer.parseInt(dealerScore.getNationalRankingItems().get(0).getPeriodScoreRanking()));
-                shop.setSpring(Double.valueOf(dealerScore.getScoreItems().get(0).getYesterdayScore()).intValue());
+                shop.setSpring(Double.valueOf(dealerScore.getScoreItems().get(0).getTotalScore()).intValue());
                 shop.setSpringProvinceCount(Integer.parseInt(dealerScore.getPeriodRankingItems().get(0).getTotalScoreRanking()));
                 shop.setSpringCountryCount(Integer.parseInt(dealerScore.getNationalRankingItems().get(0).getTotalScoreRanking()));
                 shop.setPercent(dealerScore.getBeatPercentage()+"%");
