@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface LotteryDao  extends JpaRepository<Lottery, Long>, JpaSpecificationExecutor<Lottery> {
 
-    List<Lottery> getAllByShopId(String shopId);
+    List<Lottery> getAllByShopIdOrderByIdDesc(String shopId);
 
 }

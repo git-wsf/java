@@ -32,7 +32,7 @@ public class LotteryRepositoryImpl implements LotteryRepository {
 
     @Override
     public List<Lottery> getListByShopId(String shopId) {
-        return lotteryDao.getAllByShopId(shopId);
+        return lotteryDao.getAllByShopIdOrderByIdDesc(shopId);
     }
 
     @Override
