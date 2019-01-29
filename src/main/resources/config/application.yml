@@ -111,11 +111,11 @@ weChat:
   siteUrl: http://sapi.wedge2.cn/
   gift:
     giftList:
-    - {id: 1,name: X23幻彩版, probability: 0.0001, perDay: 1, total: 1}
-    - {id: 2,name: 施瓦洛士奇银质项链, probability: 0.001, perDay: 1, total: 20}
-    - {id: 3,name: Zack蓝牙音箱, probability: 0.01, perDay: 1, total: 20}
-    - {id: 4,name: 爱奇艺会员月卡, probability: 0.01, perDay: 5, total: 300}
-    - {id: 5,name: 5元话费(三网通用), probability: 0.2, perDay: 14, total: 800}
+    - {id: 1,name: X23幻彩版, probability: 0.02, perDay: 1, total: 1}
+    - {id: 2,name: 施瓦洛士奇银质项链, probability: 0.05, perDay: 1, total: 20}
+    - {id: 3,name: Zack蓝牙音箱, probability: 0.1, perDay: 1, total: 20}
+    - {id: 4,name: 爱奇艺会员月卡, probability: 0.3, perDay: 5, total: 300}
+    - {id: 5,name: 5元话费(三网通用), probability: 0.5, perDay: 14, total: 800}
 
 shopData:
   url: https://retails-service.vivo.xyz/router?

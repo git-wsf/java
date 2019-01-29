@@ -22,6 +22,7 @@ public enum WebCodeEnum {
     USER_IN_BLACKLIST(50002);
 
     private int value;
+
     private String msg;
 
     private WebCodeEnum(int value) {
