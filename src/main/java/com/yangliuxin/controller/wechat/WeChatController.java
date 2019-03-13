@@ -2,6 +2,7 @@ package com.yangliuxin.controller.wechat;
 
 import com.alibaba.fastjson.support.spring.annotation.ResponseJSONP;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yangliuxin.application.SysLogService;
 import com.yangliuxin.bean.LotteryBean;
 import com.yangliuxin.bean.ReserveBean;
 import com.yangliuxin.bean.ShopBean;
@@ -12,6 +13,7 @@ import com.yangliuxin.exceptions.WeChatAuthorizeException;
 import com.yangliuxin.property.GiftProperty;
 import com.yangliuxin.property.WeChatAccountProperty;
 import com.yangliuxin.repository.*;
+import com.yangliuxin.repository.dao.VisitDao;
 import com.yangliuxin.utils.CookieUtil;
 import com.yangliuxin.utils.LotteryUtil;
 import com.yangliuxin.utils.SignUtil;
@@ -594,6 +596,42 @@ public class WeChatController {
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(lotteries);
+        return resultVo;
+    }
+
+    @Autowired
+    private VisitDao visitDao;
+
+
+    @PostMapping("visit")
+    @ResponseJSONP
+    @ApiOperation(value = "查询记录接口")
+    public ResultVo<Boolean> saveVisit(HttpServletRequest request, HttpServletResponse response, @RequestParam("shopId") @NotBlank @NotNull @Valid String  shopId) throws Exception{
+        ResultVo<Boolean> resultVo = new ResultVo<>();
+        Cookie cookie = CookieUtil.get(request,weChatAccountProperty.getToken());
+        if(null == cookie){
+            resultVo.setCode(0);
+            resultVo.setMsg("请先登录");
+            return resultVo;
+        }
+
+        String usersJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
+        Users users = objectMapper.readValue(usersJson,Users.class);
+        if(users == null || users.getOpenId() == null || usersRepository.getUserByOpenId(users.getOpenId()) == null){
+            resultVo.setCode(0);
+            resultVo.setMsg("请先登录");
+            return resultVo;
+        }
+
+        Visit visit = new Visit();
+        visit.setShopId(shopId);
+        visit.setUserId(Integer.parseInt(users.getId().toString()));
+        visitDao.save(visit);
+
+
+        resultVo.setCode(1);
+        resultVo.setMsg("请求成功");
+        resultVo.setData(true);
         return resultVo;
     }
 
