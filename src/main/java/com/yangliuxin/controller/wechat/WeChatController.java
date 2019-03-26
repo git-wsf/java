@@ -290,8 +290,8 @@ public class WeChatController {
             return resultVo;
         }
         Gift currentGift = getCurrentGiftById(originalIndex);
-        Long giftDayCount = (Long) redisTemplate.opsForValue().get("GIFT_DAY"+originalIndex+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-        Long giftTotalCount = (Long) redisTemplate.opsForValue().get("GIFT_TOTAL_"+originalIndex);
+        long giftDayCount = Long.parseLong(redisTemplate.opsForValue().get("GIFT_DAY" + originalIndex + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).toString());
+        long giftTotalCount = Long.parseLong(redisTemplate.opsForValue().get("GIFT_TOTAL_" + originalIndex).toString());
         if(giftDayCount + 1 >= currentGift.getPerDay()){
             resultVo.setCode(0);
             resultVo.setMsg("未中奖");
