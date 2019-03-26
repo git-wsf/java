@@ -290,7 +290,9 @@ public class WeChatController {
             return resultVo;
         }
         Gift currentGift = getCurrentGiftById(originalIndex);
-        long giftDayCount = Long.parseLong(redisTemplate.opsForValue().get("GIFT_DAY" + originalIndex + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).toString());
+        redisTemplate.opsForValue().increment("GIFT_DAY_"+originalIndex+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 0L);
+        redisTemplate.opsForValue().increment("GIFT_TOTAL_"+originalIndex, 0L);
+        long giftDayCount = Long.parseLong(redisTemplate.opsForValue().get("GIFT_DAY_" + originalIndex + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).toString());
         long giftTotalCount = Long.parseLong(redisTemplate.opsForValue().get("GIFT_TOTAL_" + originalIndex).toString());
         if(giftDayCount + 1 >= currentGift.getPerDay()){
             resultVo.setCode(0);
@@ -303,7 +305,7 @@ public class WeChatController {
             resultVo.setMsg("未中奖");
             return resultVo;
         }
-        redisTemplate.opsForValue().increment("GIFT_DAY"+originalIndex+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 1L);
+        redisTemplate.opsForValue().increment("GIFT_DAY_"+originalIndex+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), 1L);
         redisTemplate.opsForValue().increment("GIFT_TOTAL_"+originalIndex, 1L);
         Lottery lottery = new Lottery();
         lottery.setInd(originalIndex);
