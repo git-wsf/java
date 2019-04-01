@@ -120,19 +120,19 @@ public class WeChatController {
     public ResultVo<Users> login(HttpServletRequest request,  HttpServletResponse response,@RequestParam("code") @Valid @NotNull @NotBlank String code) throws Exception {
         ResultVo<Users> resultVo = new ResultVo<>();
         //token redis
-        log.info(">>>>>>LOGIN_REQUEST_DATA:{}", request);
+        log.info(">>>>>>LOGIN_REQUEST_DATA:{}", code);
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken ;
-        wxMpOAuth2AccessToken = (WxMpOAuth2AccessToken)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN");
-        Long expireIn = (Long)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN_EXPIRE");
-        if(null == wxMpOAuth2AccessToken || null == expireIn || expireIn < System.currentTimeMillis()){
-            try {
+//        wxMpOAuth2AccessToken = (WxMpOAuth2AccessToken)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN");
+//        Long expireIn = (Long)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN_EXPIRE");
+//        if(null == wxMpOAuth2AccessToken || null == expireIn || expireIn < System.currentTimeMillis()){
+//            try {
                 wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
                 redisTemplate.opsForValue().set("WX_ACCESS_TOKEN", wxMpOAuth2AccessToken);
                 redisTemplate.opsForValue().set("WX_ACCESS_TOKEN_EXPIRE",System.currentTimeMillis()+7000000);
-            } catch (WxErrorException e) {
-                throw new Exception("获取token失败，请稍后重试");
-            }
-        }
+//            } catch (WxErrorException e) {
+//                throw new Exception("获取token失败，请稍后重试");
+//            }
+//        }
 
         //String openId = wxMpOAuth2AccessToken.getOpenId();
         WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken,"zh_CN");
