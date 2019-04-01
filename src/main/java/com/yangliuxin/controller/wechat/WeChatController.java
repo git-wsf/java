@@ -120,6 +120,7 @@ public class WeChatController {
     public ResultVo<Users> login(HttpServletRequest request,  HttpServletResponse response,@RequestParam("code") @Valid @NotNull @NotBlank String code) throws Exception {
         ResultVo<Users> resultVo = new ResultVo<>();
         //token redis
+        log.info(">>>>>>LOGIN_REQUEST_DATA:{}", request);
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken ;
         wxMpOAuth2AccessToken = (WxMpOAuth2AccessToken)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN");
         Long expireIn = (Long)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN_EXPIRE");
@@ -137,8 +138,10 @@ public class WeChatController {
         WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken,"zh_CN");
         if(StringUtils.isEmpty(wxMpUser.getOpenId())) throw  new Exception("获取用户信息失败，请稍后重试");
         String openId = wxMpUser.getOpenId();
+        log.info(">>>>>>LOGIN_REQUEST_DATA:{}", openId);
 
         Users dbUsers = usersRepository.getUserByOpenId(openId);
+        log.info(">>>>>>LOGIN_REQUEST_DATA:{}", dbUsers);
         Users users = new Users();
         if(dbUsers == null){
             users.setCity(wxMpUser.getCity() != null ? wxMpUser.getCity() : "");
@@ -157,6 +160,7 @@ public class WeChatController {
             dbUsers.setNickname(wxMpUser.getNickname() != null ? wxMpUser.getNickname() : "");
             users = usersRepository.save(dbUsers);
         }
+        log.info(">>>>>>LOGIN_REQUEST_DATA:{}", users);
         String cookieValue = URLEncoder.encode(objectMapper.writeValueAsString(users),"UTF-8");
         CookieUtil.set(response, weChatAccountProperty.getToken(), cookieValue, weChatAccountProperty.getExpire());
         resultVo.setCode(1);
