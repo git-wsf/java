@@ -347,12 +347,13 @@ public class WeChatController {
 
         String usersJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
         Users users = objectMapper.readValue(usersJson,Users.class);
+        log.info(">>>>>>USERINFO_REQUEST_DATA:{}", users);
         if(users == null || users.getOpenId() == null || usersRepository.getUserByOpenId(users.getOpenId()) == null){
             resultVo.setCode(0);
             resultVo.setMsg("请先登录");
             return resultVo;
         }
-
+        log.info(">>>>>>USERINFO_REQUEST_DATA:{}", users);
         resultVo.setCode(1);
         resultVo.setMsg("请求成功");
         resultVo.setData(users);
