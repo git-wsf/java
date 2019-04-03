@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class DruidConfiguration {
@@ -100,7 +101,7 @@ public class DruidConfiguration {
                 System.err.println("druid configuration initialization filter: " + e);
             }
             datasource.setConnectionProperties(connectionProperties);
-            datasource.setConnectionInitSqls(Arrays.asList("set names utf8mb4;"));
+            datasource.setConnectionInitSqls(Collections.singleton("set names utf8mb4;"));
             return datasource;
         }
 
